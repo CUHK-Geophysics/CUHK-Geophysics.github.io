@@ -7,9 +7,9 @@ group: research
 <div class="row">
 
 # Our research
-The long-term goals of our research are to understand how protein conformational ensembles are reshaped by chemical, genetic, and physical perturbations. We seek to quantify how these perturbations impact protein function and organismal fitness. We are best known for creating multitemperature X-ray data collection approaches, which are especially powerful when paired with multiconformer computational modeling to reveal otherwise inaccessible features of conformational ensembles. Our group integrates high resolution structural biology (X-ray, EM, NMR), functional studies (deep mutational scanning, enzymology), and computation to study biological mechanisms and to improve protein engineering and small molecule discovery. Group members move fluidly between computation and experiment, often inventing new methods to answer their questions.
+The long-term goals of our research are to advance the understanding of earthquake, volcanic, and earth surface processes to aid in hazard mitigation and sustainable development. We seek to quantify how stress perturbations, fluid migration, and subsurface dynamics drive seismic and volcanic activity. We are best known for applying machine learning to produce high-resolution earthquake catalogs, which are especially powerful when paired with advanced statistical methods to reveal otherwise inaccessible features of fault systems and volcanic plumbing. Our group integrates seismology (dense arrays, ocean-bottom seismometers), geophysical data analysis (catalog construction, waveform classification), and computation to study hazard processes and to improve early warning and forecasting. Group members move fluidly between data and models, often inventing new methods to answer their questions.
 
-#### We work on many different systems and proteins as we find ourselves drawn, again and again, to the tension of high resolution data in structural biology: as resolution gets better, modeling becomes easier... until the resolution gets too good... and then the ensemble begins to reveal itself and the fun challenges begin.
+#### We work on many different tectonic and volcanic systems as we find ourselves drawn, again and again, to the power of high-resolution seismic data: as catalog completeness improves, pattern recognition becomes easier... until the resolution gets too good... and then the spatiotemporal complexity begins to reveal itself and the fun challenges begin.
 <br>
 <br>
 
@@ -30,68 +30,66 @@ We have applied machine learning to identify eruption precursors [Yuan et al., S
 
 </div>
 <div class="col-md-5 order-md-2 align-self-center">
-<img class="img-fluid" src="/static/img/pub/2017_biel.jpg" alt="qFit">
-<!-- <a href="http://www.ucsf.edu"><img class="inline-block navb-icon" src="/static/img/ucsf_logo_white.svg" alt="University of California, San Francisco (UCSF) logo"></a> -->
+<img class="img-fluid" src="/static/img/pub/2017_biel.jpg" alt="machine learning seismic detection">
+</div>
+</div>
 
-</div>
-</div>
 <div class="row">
 
-### Using multi-temperature X-ray data collection methods in mechanistic studies and ligand discovery campaigns
+### Fault response to stress changes
 
 <div class="col-md-7 order-md-2">
 
-We recognized that the standard practice of cryocooling crystals could distort protein conformations.
-In both larger surveys and isolated mechanistic studies, we have demonstrated the value of room temperature data collection for revealing the structural basis of protein conformational dynamics, leading to new insights into enzymes, and increasing connections to dynamics studies from NMR and simulations.
-Additionally, we have identified how temperature can bias small molecule discovery, leading some fragment sites inaccessible at cryogenic temperatures and repositioning critical water molecules.
+We recognized that external stress perturbations can modulate fault slip behavior and earthquake nucleation.
+In both systematic surveys and isolated case studies, we have demonstrated how tidal stress affects earthquake rates [Tan et al., GRL 2018] and frequency-magnitude distributions [Tan et al., EPSL 2019], constraining frictional properties [Scholz et al., Nature Communications 2019].
+Additionally, we have identified how dynamic triggering via teleseismic waves, reservoir-induced seismicity [Barkat et al., SRL 2022, 2024], and landslide-dammed lake triggers [Zhang et al., Nature Communications 2024] reveal the state of stress on faults.
 </div>
 
 <div class="col-md-5 order-md-1 align-self-center">
-<img class="img-fluid" src="/static/img/pub/2018_keedy_hill.jpg" alt="ptp1b">
+<img class="img-fluid" src="/static/img/pub/2018_keedy_hill.jpg" alt="stress perturbations">
 </div>
 </div>
+
 <div class="row">
 
-### Determining structures that influence microbial-host interactions
+### Dynamics of volcanic systems
 
 <div class="col-md-7 order-md-1 ">
 
-We are interested in the structural enzymology and potential therapeutic applications of the human enzymes that degrade chitin, the pervasive polymer that can cause inflammation in the context of allergy and asthma. Using high resolution cryo-electron microscopy (cryo-EM), we are studying the mechanisms of action to newly synthesized antibiotics (in collaboration with the [Seiple](https://seiplegroup.ucsf.edu/) and [Fujimori](https://fujimorilab.ucsf.edu) labs). With this platform, we are also pushing on cryo-EM data processing and refinement methods to enable structure-based drug design, now achieving resolutions better than 2.0 Å. With the improved molecules we generate, we are defining potential resistance mechanisms to these antibiotics using a combination of structural biology and deep mutational scanning experiments. In recent work, we are collaborating with the Bondy-Denomy lab to define the structural basis of anti-CRISPR proteins using a combination of X-ray crystallography, cryo-EM, and NMR. The mechanism of action for many of these proteins remains mysterious.
+We are interested in the structural dynamics and hazard assessment of submarine and subaerial volcanic systems. Using ocean-bottom seismometer (OBS) data, we analyze microearthquakes [Wilcock et al., Science 2016; Waldhauser et al., JGR 2020], mixed-frequency earthquakes [Wang et al., GRL 2024], tremors [Zhu et al., Geology 2026], and seismo-acoustic events [Tan et al., Nature 2016; Wang et al., Science Advances 2025] to characterize magmatic processes and seismic velocity changes [Lee et al., GRL 2024]. With machine learning platforms, we develop models for detecting long-period and volcano-tectonic earthng et al., Science Advances 2025] to characterize magmatic processes and seismic velocity changes [Lee et al., GRL 2024]. With machine learning platforms, we develop models for detecting long-period and volcano-tectonic earthquakes [Zhong and Tan, GRL 2024]. We are also pushing the limits of OBS er">
+
+<img class="img-fluid" src="/static/img/pub/2019_li_pellegrino.jpg" alt="volcanic seismicity">
+</div>
 </div>
 
-<div class="col-md-3 order-md-2 align-self-center">
-
-<img class="img-fluid" src="/static/img/pub/2019_li_pellegrino.jpg" alt="antibiotic">
-</div>
-</div>
 <div class="row">
 
-### Identifying unifying concepts between systems and structural biology
+### Low-frequency and long-period earthquakes
 
 <div class="col-md-7 order-md-2">
 
-
-We are intrigued by the similarities in genetic epistasis and thermodynamic measurements and are applying these insights to large-scale studies of point mutants and posttranslational modifications. We attempt to connect the response to genetic (mutation), chemical (ligands), and physical (temperature) in experiments to define the basis of allosteric regulation and function. We like to bring an evolutionary biology perspective to the table to understand the relative importance of these different perturbations in shaping the proteins we see today.
+We are intrigued by the spatiotemporal clustering and scaling properties of low-frequency earthquakes (LFEs) and are applying these insights to large-scale studies of slow-slip events and fault slip velocities [Tan and Marsan, Science Advances 2020]. We investigate LFE source processes to track fluid and magma movement [Song et al., Nature Communications 2026] and support eruption forecasting [Song et al., GRL 2023; Song and Tan, JGR 2025]. We like to bring a statistical seismology perspective to the table to understand the relative importance of tectonic and volcanic loading in shaping the fault systems we observe today.
 </div>
 
 <div class="col-md-5 order-md-1 align-self-center">
-<img class="img-fluid" src="/static/img/pub/2020_gordon_jang_bouhaddou_xu_obernier_white_omeara_rezelj.png" alt="hairball">
+<img class="img-fluid" src="/static/img/pub/2020_gordon_jang_bouhaddou_xu_obernier_white_omeara_rezelj.png" alt="LFE clustering">
 </div>
 </div>
+
 <div class="row">
 
-### Creating new time-resolved experiments to probe correlated motions in proteins
+### Earth surface processes and seismic hazard cascades
 
 <div class="col-md-7 order-md-1">
 
-A major limitation of most biophysical techniques is the inability to directly reveal correlations in motions between distinct regions of macromolecules.
-We are taking advantage of the new capabilities of next-generation X-ray free electron laser (X-FEL) light sources to perform radiation damage-free imaging of proteins and to watch how protein ensembles respond when perturbed by rapid temperature jumps using the X-FEL.
-At equilibrium, X-ray diffuse scattering has the potential to reveal these motions; however, we currently lack the ability to collect, integrate, and refine diffuse scattering data.
-Our long-term goal is to increase the information content of every X-ray diffraction experiment to reveal atomic level coupling at high resolution and improved models of grouped flexibility at low resolution.
+A major challenge in geohazard science is the inability to directly monitor and quantify rapid mass movements and their cascading impacts.
+We are taking advantage of seismic methods to quantify the dynamics of large landslides [Ho et al., Landslides 2025], dam breaches, and outburst floods [Zhang et al., JGR 2024].
+In recent work, we discovered that landslide hazard cascades can trigger earthquakes [Zhang et al., Nature Communications 2024], revealing previously unrecognized linkages between surface and subsurface hazards.
+Our long-term goal is to increase the information content of every seismic record to reveal the full chain of geophysical events and improve multi-hazard early warning systems.
 </div>
 
 <div class="col-md-5 order-md-2 align-self-center ">
-<img class="img-fluid" src="/static/img/pub/2019_thompson.jpg" alt="tjump">
+<img class="img-fluid" src="/static/img/pub/2019_thompson.jpg" alt="landslide seismology">
 </div>
 
 </div>
