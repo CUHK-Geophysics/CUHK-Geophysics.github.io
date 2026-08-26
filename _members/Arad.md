@@ -2,8 +2,8 @@
 name: Mahid Farmahinifarahani
 startdate: [2026-08-10]
 enddate: #[YYYY-MM-DD] Leave this blank until you leave the lab
-image: /static/img/members/bali.jpg #365 x 365 pixels, 72 dpi
-altimage: /static/img/members/bali_pb.jpg #365 x 365 pixels, 72 dpi
+image: /static/img/members/arad.jpg #365 x 365 pixels, 72 dpi
+altimage: /static/img/members/arad_pb.jpg #365 x 365 pixels, 72 dpi
 position: Ph.D. Student
 subsequent: #Leave this blank until you leave the lab
 email: aradfarahani@link.cuhk.edu.hk
