@@ -1,0 +1,39 @@
+---
+/**
+ * Outbound link with a consistent affordance. The icon is decorative — the
+ * destination is already carried by the link text, and "opens in a new tab"
+ * is appended to the accessible name only when the link really does.
+ */
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  href: string;
+  newTab?: boolean;
+  class?: string;
+  showIcon?: boolean;
+}
+
+const { href, newTab = true, class: className = '', showIcon = true } = Astro.props;
+---
+
+<a
+  href={href}
+  rel={newTab ? 'noopener noreferrer' : undefined}
+  target={newTab ? '_blank' : undefined}
+  class:list={[
+    'inline-flex items-baseline gap-1 text-[var(--color-brand)] underline decoration-1 underline-offset-2 transition-colors duration-[var(--duration-micro)] hover:text-[var(--color-brand-strong)] hover:decoration-2',
+    className,
+  ]}
+>
+  <span><slot /></span>
+  {
+    showIcon && (
+      <Icon
+        name="lucide:arrow-up-right"
+        class="size-3.5 shrink-0 translate-y-0.5"
+        aria-hidden="true"
+      />
+    )
+  }
+  {newTab && <span class="sr-only"> (opens in a new tab)</span>}
+</a>

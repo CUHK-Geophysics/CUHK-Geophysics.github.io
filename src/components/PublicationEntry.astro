@@ -1,0 +1,140 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import type { Publication } from '@/data/publications';
+import { topics } from '@/data/publications';
+
+interface Props {
+  pub: Publication;
+}
+
+const { pub } = Astro.props;
+---
+
+<li
+  class="border-t border-[var(--color-line)] py-6 first:border-t-0"
+  data-pub
+  data-year={pub.year ?? 'in-press'}
+  data-topics={pub.topics.join(' ')}
+>
+  <div class="flex gap-4 sm:gap-5">
+    <span
+      class="mt-0.5 shrink-0 font-serif text-sm font-semibold text-[var(--color-ink-subtle)] tabular-nums"
+      aria-hidden="true"
+    >
+      {String(pub.n).padStart(2, '0')}
+    </span>
+
+    <div class="min-w-0 flex-1">
+      <h3 class="font-serif text-lg leading-snug font-semibold text-balance">
+        {pub.title}
+      </h3>
+
+      <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+        {pub.authors}
+      </p>
+
+      <p class="mt-1.5 text-sm text-[var(--color-ink-muted)]">
+        <span class="italic">{pub.journal}</span>
+        {pub.detail && <span>, {pub.detail}</span>}
+        {
+          pub.status ? (
+            <span class="text-2xs ml-2 inline-flex items-center rounded-sm bg-[var(--color-accent-wash)] px-2 py-0.5 font-bold tracking-wide text-[var(--color-accent)] uppercase">
+              {pub.status}
+            </span>
+          ) : (
+            <span class="ml-1 font-bold text-[var(--color-ink)] tabular-nums">({pub.year})</span>
+          )
+        }
+      </p>
+
+      <!-- Access links -->
+      {
+        (pub.pdf || pub.review || pub.extras) && (
+          <ul class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+            {pub.pdf && (
+              <li>
+                <a
+                  href={pub.pdf}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  class="inline-flex items-center gap-1.5 text-sm font-bold text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)] hover:decoration-2"
+                >
+                  <Icon name="lucide:file-text" class="size-4" aria-hidden="true" />
+                  Full text
+                  <span class="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+            )}
+            {pub.review && (
+              <li>
+                <a
+                  href={pub.review}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  class="inline-flex items-center gap-1.5 text-sm text-[var(--color-ink-muted)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand)]"
+                >
+                  <Icon name="lucide:messages-square" class="size-4" aria-hidden="true" />
+                  Peer review
+                  <span class="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+            )}
+            {pub.extras?.map((extra) => (
+              <li>
+                <a
+                  href={extra.href}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  class="inline-flex items-center gap-1.5 text-sm text-[var(--color-ink-muted)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand)]"
+                >
+                  <Icon name="lucide:external-link" class="size-4" aria-hidden="true" />
+                  {extra.label}
+                  <span class="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      <!-- Topics + press coverage -->
+      <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+        <ul class="flex flex-wrap gap-1.5">
+          {
+            pub.topics.map((t) => (
+              <li class="text-2xs rounded-sm border border-[var(--color-line)] px-2 py-0.5 text-[var(--color-ink-subtle)]">
+                {topics[t]}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      {
+        pub.coverage && (
+          <p class="mt-3 text-xs text-[var(--color-ink-subtle)]">
+            <span class="font-bold">Coverage:</span>{' '}
+            {pub.coverage.map((c, i) => (
+              <>
+                {i > 0 && ' · '}
+                {c.href ? (
+                  <a
+                    href={c.href}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    class="underline decoration-1 underline-offset-2 hover:text-[var(--color-brand)]"
+                  >
+                    {c.label}
+                  </a>
+                ) : (
+                  <span>{c.label}</span>
+                )}
+              </>
+            ))}
+          </p>
+        )
+      }
+    </div>
+  </div>
+</li>

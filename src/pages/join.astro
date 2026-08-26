@@ -1,0 +1,163 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import ExternalLink from '@/components/ExternalLink.astro';
+import Section from '@/components/Section.astro';
+import { fitDocument, offers, opportunities, values } from '@/data/opportunities';
+import PageLayout from '@/layouts/PageLayout.astro';
+import { piEmail } from '@/lib/site';
+
+const graduate = opportunities.filter((o) => o.audience === 'graduate');
+const postdoc = opportunities.filter((o) => o.audience === 'postdoc');
+
+const groups = [
+  { heading: 'Prospective graduate students', items: graduate },
+  { heading: 'Prospective postdoctoral fellows', items: postdoc },
+];
+---
+
+<PageLayout
+  title="Join Us"
+  heading="Join the group"
+  eyebrow="Opportunities"
+  lead="We are always interested in hearing from motivated students and postdoctoral researchers, and we typically welcome one to two new group members each year."
+  description="Opportunities, funding schemes and application deadlines for prospective graduate students and postdoctoral researchers in the CUHK Geophysics Laboratory."
+>
+  <Fragment slot="header-extra">
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a
+        href={`mailto:${piEmail}`}
+        class="inline-flex min-h-11 items-center gap-2 rounded-md bg-[var(--color-brand)] px-5 text-[0.9375rem] font-bold text-[var(--color-on-brand)] transition-colors duration-[var(--duration-micro)] hover:bg-[var(--color-brand-strong)]"
+      >
+        <Icon name="lucide:mail" class="size-4" aria-hidden="true" />
+        Email the PI
+      </a>
+      <a
+        href={fitDocument}
+        rel="noopener noreferrer"
+        target="_blank"
+        class="inline-flex min-h-11 items-center gap-2 rounded-md border border-[var(--color-line-strong)] bg-[var(--color-surface)] px-5 text-[0.9375rem] font-bold text-[var(--color-ink)] transition-colors duration-[var(--duration-micro)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+      >
+        <Icon name="lucide:file-text" class="size-4" aria-hidden="true" />
+        Group information (PDF)
+        <span class="sr-only"> — opens in a new tab</span>
+      </a>
+    </div>
+  </Fragment>
+
+  <!-- ======================= Funding routes ======================= -->
+  <Section
+    eyebrow="Funding"
+    title="Routes into the group"
+    lead="Deadlines and stipend figures are indicative — always confirm against the scheme's own page, which is linked from each entry."
+  >
+    <div class="space-y-12">
+      {
+        groups.map((group) => (
+          <section>
+            <h3 class="border-b border-[var(--color-line)] pb-3 font-serif text-xl">
+              {group.heading}
+            </h3>
+            <ul class="mt-6 grid gap-5 lg:grid-cols-2">
+              {group.items.map((item) => (
+                <li>
+                  <article class="flex h-full flex-col rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] p-6">
+                    <h4 class="font-serif text-lg leading-snug font-semibold text-balance">
+                      <ExternalLink href={item.href} showIcon={false}>
+                        {item.name}
+                      </ExternalLink>
+                    </h4>
+
+                    {item.dates && (
+                      <p class="mt-3 inline-flex w-fit items-center gap-1.5 rounded-sm bg-[var(--color-brand-wash)] px-2.5 py-1 text-sm font-bold text-[var(--color-brand)]">
+                        <Icon name="lucide:calendar-days" class="size-4" aria-hidden="true" />
+                        {item.dates}
+                      </p>
+                    )}
+
+                    <p class="mt-3 flex items-start gap-1.5 text-sm text-[var(--color-ink-muted)]">
+                      <Icon name="lucide:clock" class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                      <span>{item.deadline}</span>
+                    </p>
+
+                    <ul class="mt-4 flex-1 space-y-2 text-sm text-[var(--color-ink-muted)]">
+                      {item.details.map((detail) => (
+                        <li class="flex gap-2">
+                          <span
+                            class="mt-2 size-1.5 shrink-0 rounded-full bg-[var(--color-brand)]"
+                            aria-hidden="true"
+                          />
+                          <span>{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </Section>
+
+  <!-- ==================== Values and offer ==================== -->
+  <Section tone="muted">
+    <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <h2 class="text-2xl">What we look for</h2>
+        <dl class="mt-6 space-y-5">
+          {
+            values.map((value) => (
+              <div class="border-l-2 border-[var(--color-brand)] pl-4">
+                <dt class="font-bold text-[var(--color-ink)]">{value.title}</dt>
+                <dd class="mt-1 text-[var(--color-ink-muted)]">{value.body}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <div>
+        <h2 class="text-2xl">What we aim to offer</h2>
+        <ul class="mt-6 space-y-4">
+          {
+            offers.map((offer) => (
+              <li class="flex gap-3">
+                <Icon
+                  name="lucide:check"
+                  class="mt-1 size-5 shrink-0 text-[var(--color-brand)]"
+                  aria-hidden="true"
+                />
+                <span class="text-[var(--color-ink-muted)]">{offer}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Section>
+
+  <Section>
+    <div
+      class="rounded-lg border border-[var(--color-line)] bg-[var(--color-brand-wash)] p-8 md:p-10"
+    >
+      <h2 class="text-2xl">Ready to write?</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-[var(--color-ink-muted)]">
+        Tell us what you have worked on, what you would like to work on, and why you think this
+        group is a good fit. We welcome applicants from
+        {' '}
+        <strong class="text-[var(--color-ink)]">all</strong> backgrounds.
+      </p>
+      <p class="mt-6">
+        <a
+          href={`mailto:${piEmail}`}
+          class="inline-flex min-h-11 items-center gap-2 rounded-md bg-[var(--color-brand)] px-5 text-[0.9375rem] font-bold text-[var(--color-on-brand)] transition-colors duration-[var(--duration-micro)] hover:bg-[var(--color-brand-strong)]"
+        >
+          <Icon name="lucide:mail" class="size-4" aria-hidden="true" />
+          {piEmail}
+        </a>
+      </p>
+    </div>
+  </Section>
+</PageLayout>

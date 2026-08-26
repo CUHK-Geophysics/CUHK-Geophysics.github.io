@@ -1,0 +1,254 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import ExternalLink from '@/components/ExternalLink.astro';
+import PublicationEntry from '@/components/PublicationEntry.astro';
+import {
+  authorMarkerLegend,
+  byYear,
+  inPress,
+  published,
+  scholarUrl,
+  topics,
+} from '@/data/publications';
+import PageLayout from '@/layouts/PageLayout.astro';
+import { site } from '@/lib/site';
+
+const topicEntries = Object.entries(topics) as [keyof typeof topics, string][];
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `Publications — ${site.longName}`,
+  hasPart: published.slice(0, 20).map((p) => ({
+    '@type': 'ScholarlyArticle',
+    headline: p.title,
+    datePublished: String(p.year),
+    isPartOf: { '@type': 'Periodical', name: p.journal },
+    ...(p.pdf ? { url: p.pdf } : {}),
+  })),
+};
+---
+
+<PageLayout
+  title="Publications"
+  heading="Publications"
+  eyebrow="Publications"
+  lead={`${published.length} peer-reviewed papers, plus ${inPress.length} manuscripts currently in review. Where our peer-review correspondence is public, it is linked alongside the paper.`}
+  description={`Complete publication list of the CUHK Geophysics Laboratory — ${published.length} peer-reviewed papers on earthquake, volcanic and Earth surface processes.`}
+  structuredData={structuredData}
+>
+  <Fragment slot="header-extra">
+    <p class="mt-6">
+      <ExternalLink href={scholarUrl} class="font-bold">Google Scholar profile</ExternalLink>
+    </p>
+  </Fragment>
+
+  <div class="container-page py-12">
+    <div class="grid gap-10 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-12">
+      <!-- Filters and year rail -->
+      <aside class="lg:sticky lg:top-24 lg:self-start">
+        <section aria-labelledby="filter-topic-heading">
+          <h2
+            id="filter-topic-heading"
+            class="text-2xs font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase"
+          >
+            Filter by topic
+          </h2>
+          <!-- Hidden until scripted: with no JS the complete list is already shown,
+               so dead filter buttons would only mislead. -->
+          <div class="mt-3 hidden flex-wrap gap-2" data-topic-filters>
+            <button
+              type="button"
+              data-topic="all"
+              aria-pressed="true"
+              class="cursor-pointer rounded-sm border border-[var(--color-line-strong)] px-3 py-1.5 text-sm transition-colors duration-[var(--duration-micro)] not-aria-pressed:hover:border-[var(--color-brand)] not-aria-pressed:hover:text-[var(--color-brand)] aria-pressed:border-[var(--color-brand)] aria-pressed:bg-[var(--color-brand)] aria-pressed:font-bold aria-pressed:text-[var(--color-on-brand)]"
+            >
+              All
+            </button>
+            {
+              topicEntries.map(([key, label]) => (
+                <button
+                  type="button"
+                  data-topic={key}
+                  aria-pressed="false"
+                  class="cursor-pointer rounded-sm border border-[var(--color-line-strong)] px-3 py-1.5 text-sm transition-colors duration-[var(--duration-micro)] not-aria-pressed:hover:border-[var(--color-brand)] not-aria-pressed:hover:text-[var(--color-brand)] aria-pressed:border-[var(--color-brand)] aria-pressed:bg-[var(--color-brand)] aria-pressed:font-bold aria-pressed:text-[var(--color-on-brand)]"
+                >
+                  {label}
+                </button>
+              ))
+            }
+          </div>
+          <p class="mt-3 text-sm text-[var(--color-ink-subtle)]" aria-live="polite" data-count></p>
+
+          <script is:inline>
+            /* Runs during parse so the filters occupy their final space in the
+               first paint — revealing them later would register as layout shift.
+               The entry list is further down the document and is not queryable
+               yet, so this only checks that scripting works at all, which is the
+               single condition that makes the filters useful. */
+            (() => {
+              const el = document.querySelector('[data-topic-filters]');
+              if (el) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+              }
+            })();
+          </script>
+        </section>
+
+        <nav class="mt-8" aria-labelledby="year-rail-heading">
+          <h2
+            id="year-rail-heading"
+            class="text-2xs font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase"
+          >
+            Jump to year
+          </h2>
+          <ul class="mt-3 flex flex-wrap gap-1.5">
+            {
+              inPress.length > 0 && (
+                <li>
+                  <a
+                    href="#in-press"
+                    class="inline-block rounded-sm px-2.5 py-1.5 text-sm text-[var(--color-ink-muted)] tabular-nums underline decoration-1 underline-offset-2 hover:bg-[var(--color-surface-2)] hover:text-[var(--color-brand)]"
+                  >
+                    In review
+                  </a>
+                </li>
+              )
+            }
+            {
+              byYear.map(({ year }) => (
+                <li>
+                  <a
+                    href={`#y${year}`}
+                    class="inline-block rounded-sm px-2.5 py-1.5 text-sm text-[var(--color-ink-muted)] tabular-nums underline decoration-1 underline-offset-2 hover:bg-[var(--color-surface-2)] hover:text-[var(--color-brand)]"
+                  >
+                    {year}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <section class="mt-8" aria-labelledby="legend-heading">
+          <h2
+            id="legend-heading"
+            class="text-2xs font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase"
+          >
+            Author markers
+          </h2>
+          <dl class="mt-3 space-y-1.5 text-sm">
+            {
+              authorMarkerLegend.map((entry) => (
+                <div class="flex gap-2.5">
+                  <dt class="w-4 shrink-0 text-center font-bold text-[var(--color-brand)]">
+                    {entry.marker}
+                  </dt>
+                  <dd class="text-[var(--color-ink-muted)]">{entry.meaning}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </section>
+      </aside>
+
+      <!-- The list -->
+      <div>
+        <p
+          class="mb-8 hidden rounded-md border border-[var(--color-line)] bg-[var(--color-surface-2)] p-4 text-sm text-[var(--color-ink-muted)]"
+          data-empty
+        >
+          <Icon
+            name="lucide:search-x"
+            class="mr-1.5 inline-block size-4 -translate-y-px"
+            aria-hidden="true"
+          />
+          No publications match this topic.
+        </p>
+
+        {
+          inPress.length > 0 && (
+            <section id="in-press" class="scroll-mt-24" data-group>
+              <h2 class="border-b-2 border-[var(--color-brand)] pb-2 font-serif text-2xl">
+                In review
+              </h2>
+              <ol class="mt-2">
+                {inPress.map((pub) => (
+                  <PublicationEntry pub={pub} />
+                ))}
+              </ol>
+            </section>
+          )
+        }
+
+        {
+          byYear.map(({ year, items }) => (
+            <section id={`y${year}`} class="mt-14 scroll-mt-24" data-group>
+              <h2 class="border-b-2 border-[var(--color-brand)] pb-2 font-serif text-2xl tabular-nums">
+                {year}
+              </h2>
+              <ol class="mt-2">
+                {items.map((pub) => (
+                  <PublicationEntry pub={pub} />
+                ))}
+              </ol>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</PageLayout>
+
+<script>
+  const filterWrap = document.querySelector<HTMLElement>('[data-topic-filters]');
+  const entries = [...document.querySelectorAll<HTMLElement>('[data-pub]')];
+  const groups = [...document.querySelectorAll<HTMLElement>('[data-group]')];
+  const count = document.querySelector<HTMLElement>('[data-count]');
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+
+  if (filterWrap && entries.length > 0) {
+    /* Already revealed by the inline script during parse; repeated here only in
+       case that script was blocked. */
+    filterWrap.classList.remove('hidden');
+    filterWrap.classList.add('flex');
+
+    const buttons = [...filterWrap.querySelectorAll<HTMLButtonElement>('[data-topic]')];
+    const total = entries.length;
+
+    const apply = (topic: string) => {
+      let shown = 0;
+      for (const entry of entries) {
+        const match = topic === 'all' || (entry.dataset['topics'] ?? '').split(' ').includes(topic);
+        entry.hidden = !match;
+        if (match) shown++;
+      }
+      // Hide a year heading whose entries are all filtered out.
+      for (const group of groups) {
+        const anyVisible = [...group.querySelectorAll<HTMLElement>('[data-pub]')].some(
+          (el) => !el.hidden
+        );
+        group.hidden = !anyVisible;
+      }
+      if (count) {
+        count.textContent =
+          topic === 'all'
+            ? `Showing all ${total} entries.`
+            : `Showing ${shown} of ${total} entries.`;
+      }
+      empty?.classList.toggle('hidden', shown > 0);
+
+      for (const button of buttons) {
+        button.setAttribute('aria-pressed', String(button.dataset['topic'] === topic));
+      }
+    };
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => apply(button.dataset['topic'] ?? 'all'));
+    }
+
+    apply('all');
+  }
+</script>

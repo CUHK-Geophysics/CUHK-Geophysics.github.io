@@ -1,0 +1,304 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+
+import logo from '@/assets/brand/logo.png';
+import Button from '@/components/Button.astro';
+import Carousel from '@/components/Carousel.astro';
+import ExternalLink from '@/components/ExternalLink.astro';
+import Section from '@/components/Section.astro';
+import { featuredPhotos } from '@/data/gallery';
+import { published } from '@/data/publications';
+import { themes } from '@/data/research';
+import { members } from '@/data/team';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contact, piEmail, site } from '@/lib/site';
+import { href } from '@/lib/url';
+
+const recent = published.slice(0, 3);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ResearchOrganization',
+  name: `${site.longName} @ ${site.university.shortName}`,
+  url: Astro.site?.href,
+  description: site.description,
+  parentOrganization: {
+    '@type': 'CollegeOrUniversity',
+    name: site.university.name,
+    url: site.university.url,
+  },
+  department: { '@type': 'Organization', name: site.department.name, url: site.department.url },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${contact.lab.room}, ${contact.lab.building}`,
+    addressLocality: contact.lab.district,
+    addressRegion: 'Hong Kong SAR',
+    addressCountry: 'HK',
+  },
+  employee: { '@type': 'Person', name: contact.pi.name, jobTitle: contact.pi.title },
+};
+---
+
+<BaseLayout
+  title={`${site.longName} @ ${site.university.shortName}`}
+  bareTitle
+  structuredData={structuredData}
+>
+  <!-- ============================ Hero ============================ -->
+  <section class="border-b border-[var(--color-line)] bg-[var(--color-surface-2)]">
+    <div class="container-page py-14 md:py-20">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
+        <div class="max-w-3xl">
+          <p
+            class="text-2xs mb-4 font-sans font-bold tracking-[0.16em] text-[var(--color-brand)] uppercase"
+          >
+            {site.department.name}
+          </p>
+          <h1 class="text-5xl">
+            Geophysics Laboratory at&nbsp;<span class="text-[var(--color-brand)]"
+              >{site.university.shortName}</span
+            >
+          </h1>
+          <p class="mt-6 max-w-2xl text-xl leading-relaxed text-[var(--color-ink-muted)]">
+            We study earthquake, volcanic and Earth surface processes — and work to turn what we
+            learn into better hazard mitigation and more sustainable development.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <Button href={href('/research')}>
+              Our research
+              <Icon name="lucide:arrow-right" class="size-4" aria-hidden="true" />
+            </Button>
+            <Button href={href('/join')} variant="secondary">Join the group</Button>
+          </div>
+        </div>
+
+        <Image
+          src={logo}
+          alt={`${site.longName} emblem: a globe with a seismogram trace above a cross-section of the Earth's crust`}
+          width={220}
+          height={220}
+          densities={[1, 2]}
+          loading="eager"
+          fetchpriority="high"
+          class="mx-auto w-40 lg:w-56"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= Mission ========================= -->
+  <Section>
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-16">
+      <div>
+        <h2 class="text-3xl">What we do</h2>
+        <div class="prose-page mt-6">
+          <p>
+            We are part of the <ExternalLink href={site.department.url}
+              >Department of Earth and Environmental Sciences</ExternalLink
+            > at <ExternalLink href={site.university.url}
+              >The Chinese University of Hong Kong</ExternalLink
+            >, based in the Mong Man Wai Building on the main campus.
+          </p>
+          <p>
+            Our mission is to learn as much as possible about earthquake, volcanic and Earth surface
+            processes — while enjoying the journey along the way. Our ultimate hope is to learn
+            things that can help mitigate these potential hazards and contribute towards the
+            sustainable development of society.
+          </p>
+          <p>
+            We are best known for applying machine learning to produce high-resolution earthquake
+            catalogues, which become especially powerful when paired with advanced statistical
+            methods to reveal features of fault systems and volcanic plumbing that would otherwise
+            stay hidden.
+          </p>
+        </div>
+      </div>
+
+      <!-- At-a-glance -->
+      <aside
+        class="h-fit rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-2)] p-6"
+      >
+        <h3
+          class="text-2xs font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase"
+        >
+          The group at a glance
+        </h3>
+        <dl class="mt-5 space-y-4">
+          <div
+            class="flex items-baseline justify-between gap-4 border-b border-[var(--color-line)] pb-4"
+          >
+            <dt class="text-sm text-[var(--color-ink-muted)]">Peer-reviewed publications</dt>
+            <dd class="font-serif text-2xl font-semibold text-[var(--color-brand)]">
+              {published.length}
+            </dd>
+          </div>
+          <div
+            class="flex items-baseline justify-between gap-4 border-b border-[var(--color-line)] pb-4"
+          >
+            <dt class="text-sm text-[var(--color-ink-muted)]">Current members</dt>
+            <dd class="font-serif text-2xl font-semibold text-[var(--color-brand)]">
+              {members.length + 1}
+            </dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-4">
+            <dt class="text-sm text-[var(--color-ink-muted)]">Research themes</dt>
+            <dd class="font-serif text-2xl font-semibold text-[var(--color-brand)]">
+              {themes.length}
+            </dd>
+          </div>
+        </dl>
+        <p class="mt-6 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+          We typically welcome one to two new members each year and we welcome applicants from
+          {' '}
+          <strong class="text-[var(--color-ink)]">all</strong> backgrounds.
+        </p>
+        <p class="mt-4">
+          <a
+            href={href('/join')}
+            class="inline-flex items-center gap-1.5 text-sm font-bold text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+          >
+            How to apply
+            <Icon name="lucide:arrow-right" class="size-4" aria-hidden="true" />
+          </a>
+        </p>
+      </aside>
+    </div>
+  </Section>
+
+  <!-- ====================== Research themes ====================== -->
+  <Section
+    tone="muted"
+    eyebrow="Research"
+    title="Five threads that run through our work"
+    lead="From deep-learning phase pickers to ocean-bottom seismometers, our projects share one instinct: push the resolution of the seismic record until the process reveals itself."
+  >
+    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        themes.map((theme) => (
+          <li>
+            <a
+              href={`${href('/research')}#${theme.id}`}
+              class="group flex h-full flex-col rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] p-6 transition-colors duration-[var(--duration-base)] hover:border-[var(--color-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]"
+            >
+              <h3 class="font-serif text-xl font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-brand)]">
+                {theme.title}
+              </h3>
+              <p class="mt-3 flex-1 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+                {theme.summary}
+              </p>
+              <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--color-brand)]">
+                Read more
+                <Icon
+                  name="lucide:arrow-right"
+                  class="size-4 transition-transform duration-[var(--duration-base)] group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <!-- ========================= Slideshow ========================= -->
+  <Section
+    eyebrow="In the field"
+    title="Where the data comes from"
+    lead="Volcano flanks, crater lakes, ridge crests and research vessels — a look at the group at work."
+  >
+    <Carousel photos={featuredPhotos} label="Photographs of the group in the field" />
+    <p class="mt-6">
+      <a
+        href={href('/gallery')}
+        class="inline-flex items-center gap-1.5 font-bold text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+      >
+        See the full gallery
+        <Icon name="lucide:arrow-right" class="size-4" aria-hidden="true" />
+      </a>
+    </p>
+  </Section>
+
+  <!-- ====================== Recent publications ====================== -->
+  <Section tone="muted" eyebrow="Publications" title="Recently published">
+    <ol class="divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
+      {
+        recent.map((pub) => (
+          <li class="py-5">
+            <p class="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-[var(--color-ink-subtle)]">
+              <span class="font-bold text-[var(--color-brand)]">{pub.year}</span>
+              <span class="italic">{pub.journal}</span>
+            </p>
+            <h3 class="mt-1.5 font-serif text-lg leading-snug font-semibold">
+              {pub.pdf ? (
+                <a
+                  href={pub.pdf}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  class="hover:text-[var(--color-brand)] hover:underline hover:decoration-1 hover:underline-offset-2"
+                >
+                  {pub.title}
+                  <span class="sr-only"> (PDF, opens in a new tab)</span>
+                </a>
+              ) : (
+                pub.title
+              )}
+            </h3>
+            <p class="mt-1.5 text-sm text-[var(--color-ink-muted)]">{pub.authors}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="mt-8">
+      <Button href={href('/publications')} variant="secondary">
+        All {published.length} publications
+      </Button>
+    </p>
+  </Section>
+
+  <!-- ========================== Contact ========================== -->
+  <Section>
+    <div
+      class="rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-2)] p-8 md:p-12"
+    >
+      <div class="grid gap-10 md:grid-cols-2 md:gap-16">
+        <div>
+          <h2 class="text-2xl">Get in touch</h2>
+          <p class="mt-4 leading-relaxed text-[var(--color-ink-muted)]">
+            Our group is always looking for excellent students and postdocs. Please reach out if you
+            think we would be a good fit.
+          </p>
+          <p class="mt-6">
+            <a
+              href={`mailto:${piEmail}`}
+              class="inline-flex min-h-11 items-center gap-2 rounded-md bg-[var(--color-brand)] px-5 text-[0.9375rem] font-bold text-[var(--color-on-brand)] transition-colors duration-[var(--duration-micro)] hover:bg-[var(--color-brand-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]"
+            >
+              <Icon name="lucide:mail" class="size-4" aria-hidden="true" />
+              {piEmail}
+            </a>
+          </p>
+        </div>
+        <div class="text-sm leading-relaxed text-[var(--color-ink-muted)]">
+          <p class="font-bold text-[var(--color-ink)]">
+            {contact.pi.name}, Ph.D.
+            <span lang="zh-Hant" class="ml-1 font-normal">({contact.pi.nameChinese})</span>
+          </p>
+          <p>{contact.pi.title}</p>
+          <address class="mt-4 not-italic">
+            {contact.lab.room}<br />
+            {contact.lab.building}, {contact.lab.campus}<br />
+            {contact.lab.district}, {contact.lab.region}
+          </address>
+          <p class="mt-4">
+            <a
+              href={href('/contact')}
+              class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+              >Directions and full contact details</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>

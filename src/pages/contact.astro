@@ -1,0 +1,199 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+
+import mapToCuhk from '@/assets/brand/map-to-cuhk.jpg';
+import ExternalLink from '@/components/ExternalLink.astro';
+import Section from '@/components/Section.astro';
+import PageLayout from '@/layouts/PageLayout.astro';
+import { contact, piEmail, site } from '@/lib/site';
+
+const directions = [
+  {
+    icon: 'lucide:train-front',
+    title: 'By MTR',
+    steps: [
+      'Take the East Rail Line to University Station. The campus is directly accessible from the station exits.',
+      'From University Station, board a free CUHK campus shuttle bus heading uphill towards the central campus.',
+    ],
+  },
+  {
+    icon: 'lucide:bus',
+    title: 'By bus',
+    steps: [
+      'Various KMB and green minibus routes serve the CUHK area from Sha Tin, Tai Po and Kowloon.',
+    ],
+  },
+  {
+    icon: 'lucide:car',
+    title: 'By car',
+    steps: [
+      'The campus is accessible from Tai Po Road. Visitor parking is limited.',
+      'If you are being dropped off, use the Mong Man Wai Building as the destination.',
+    ],
+  },
+] as const;
+
+const onCampus = [
+  'From University Station, take the campus shuttle or walk uphill towards the Science Centre area.',
+  'Find the Mong Man Wai Building, which houses the Department of Earth and Environmental Sciences.',
+  'Take the lift to the 3rd floor.',
+  'Room 309 (Lab 4) is the Geophysics Laboratory.',
+];
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  mainEntity: {
+    '@type': 'ResearchOrganization',
+    name: `${site.longName} @ ${site.university.shortName}`,
+    email: piEmail,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: `${contact.lab.room}, ${contact.lab.building}`,
+      addressLocality: contact.lab.district,
+      addressRegion: 'Hong Kong SAR',
+      addressCountry: 'HK',
+    },
+  },
+};
+---
+
+<PageLayout
+  title="Contact"
+  heading="Contact us"
+  eyebrow="Contact"
+  lead="We are in the Mong Man Wai Building on the main CUHK campus in Sha Tin, New Territories."
+  description="Contact details, address and directions to the CUHK Geophysics Laboratory in the Mong Man Wai Building, Sha Tin, Hong Kong."
+  structuredData={structuredData}
+>
+  <!-- ========================= Addresses ========================= -->
+  <Section>
+    <div class="grid gap-6 md:grid-cols-2">
+      <article
+        class="rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-2)] p-6 md:p-8"
+      >
+        <h2 class="flex items-center gap-2 text-xl">
+          <Icon
+            name="lucide:flask-conical"
+            class="size-5 text-[var(--color-brand)]"
+            aria-hidden="true"
+          />
+          Laboratory
+        </h2>
+        <address class="mt-4 leading-relaxed text-[var(--color-ink-muted)] not-italic">
+          <ExternalLink href={site.department.url} showIcon={false}>
+            {site.department.name}
+          </ExternalLink><br />
+          {contact.lab.room}<br />
+          {contact.lab.building}<br />
+          {contact.lab.campus}<br />
+          {contact.lab.district}, {contact.lab.region}
+        </address>
+      </article>
+
+      <article
+        class="rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-2)] p-6 md:p-8"
+      >
+        <h2 class="flex items-center gap-2 text-xl">
+          <Icon
+            name="lucide:user-round"
+            class="size-5 text-[var(--color-brand)]"
+            aria-hidden="true"
+          />
+          Principal investigator
+        </h2>
+        <p class="mt-4 font-bold text-[var(--color-ink)]">
+          {contact.pi.name}, Ph.D.
+          <span lang="zh-Hant" class="ml-1 font-normal text-[var(--color-ink-muted)]">
+            ({contact.pi.nameChinese})
+          </span>
+        </p>
+        <p class="text-[var(--color-ink-muted)]">{contact.pi.title}</p>
+        <address class="mt-3 leading-relaxed text-[var(--color-ink-muted)] not-italic">
+          {contact.pi.office}<br />
+          {contact.lab.building}, {contact.lab.campus}<br />
+          {contact.lab.district}, {contact.lab.region}
+        </address>
+        <p class="mt-4">
+          <a
+            href={`mailto:${piEmail}`}
+            class="inline-flex min-h-11 items-center gap-2 rounded-md bg-[var(--color-brand)] px-4 text-[0.9375rem] font-bold text-[var(--color-on-brand)] transition-colors duration-[var(--duration-micro)] hover:bg-[var(--color-brand-strong)]"
+          >
+            <Icon name="lucide:mail" class="size-4" aria-hidden="true" />
+            {piEmail}
+          </a>
+        </p>
+      </article>
+    </div>
+  </Section>
+
+  <!-- ========================= Directions ========================= -->
+  <Section tone="muted" eyebrow="Getting here" title="Reaching the CUHK campus">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] lg:gap-14">
+      <div>
+        <ul class="space-y-6">
+          {
+            directions.map((mode) => (
+              <li class="flex gap-4">
+                <span
+                  class="inline-flex size-10 shrink-0 items-center justify-center rounded-md bg-[var(--color-brand-wash)] text-[var(--color-brand)]"
+                  aria-hidden="true"
+                >
+                  <Icon name={mode.icon} class="size-5" />
+                </span>
+                <div>
+                  <h3 class="font-serif text-lg font-semibold">{mode.title}</h3>
+                  <ul class="mt-1.5 space-y-1.5 text-[var(--color-ink-muted)]">
+                    {mode.steps.map((step) => (
+                      <li>{step}</li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="mt-10">
+          <h3 class="font-serif text-lg font-semibold">Once you are on campus</h3>
+          <ol class="mt-3 space-y-2.5">
+            {
+              onCampus.map((step, i) => (
+                <li class="flex gap-3 text-[var(--color-ink-muted)]">
+                  <span
+                    class="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand)] text-xs font-bold text-[var(--color-on-brand)] tabular-nums"
+                    aria-hidden="true"
+                  >
+                    {i + 1}
+                  </span>
+                  <span>{step}</span>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+
+        <p class="mt-8 text-sm">
+          <ExternalLink href="https://www.cuhk.edu.hk/campus-shuttle">
+            CUHK campus shuttle timetable
+          </ExternalLink>
+        </p>
+      </div>
+
+      <figure>
+        <Image
+          src={mapToCuhk}
+          alt="Map of the CUHK campus showing the location of the Mong Man Wai Building relative to University Station."
+          widths={[320, 480, 641]}
+          sizes="(min-width: 1024px) 320px, 92vw"
+          loading="lazy"
+          class="w-full rounded-lg border border-[var(--color-line)] bg-white"
+        />
+        <figcaption class="mt-3 text-sm text-[var(--color-ink-subtle)]">
+          The Mong Man Wai Building on the main CUHK campus.
+        </figcaption>
+      </figure>
+    </div>
+  </Section>
+</PageLayout>

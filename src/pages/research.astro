@@ -1,0 +1,160 @@
+---
+import { Image } from 'astro:assets';
+
+import ExternalLink from '@/components/ExternalLink.astro';
+import VideoFacade from '@/components/VideoFacade.astro';
+import { publications } from '@/data/publications';
+import { researchIntro, themes } from '@/data/research';
+import PageLayout from '@/layouts/PageLayout.astro';
+import { href } from '@/lib/url';
+
+/** Resolve the publication numbers each theme cites into linkable records. */
+const byNumber = new Map(publications.map((p) => [p.n, p]));
+---
+
+<PageLayout
+  title="Research"
+  heading="Our research"
+  eyebrow="Research"
+  lead={researchIntro.lead}
+  description="Research in the CUHK Geophysics Laboratory: machine learning for earthquake catalogues, fault response to stress changes, volcanic system dynamics, low-frequency earthquakes, and Earth surface hazard cascades."
+>
+  <!-- Intro + in-page navigation -->
+  <div class="container-page py-14 md:py-20">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
+      <div>
+        <div class="prose-page">
+          {researchIntro.body.map((para) => <p>{para}</p>)}
+        </div>
+
+        <blockquote
+          class="mt-10 border-l-[3px] border-[var(--color-brand)] bg-[var(--color-brand-wash)] py-5 pr-5 pl-6"
+        >
+          <p class="font-serif text-xl leading-relaxed text-[var(--color-ink)] italic">
+            {researchIntro.pullquote}
+          </p>
+        </blockquote>
+
+        <div class="mt-12">
+          <VideoFacade
+            id={researchIntro.video.id}
+            title={researchIntro.video.title}
+            start={researchIntro.video.start}
+          />
+        </div>
+      </div>
+
+      <!-- Sticky theme index -->
+      <nav class="lg:sticky lg:top-24 lg:self-start" aria-labelledby="themes-nav-heading">
+        <h2
+          id="themes-nav-heading"
+          class="text-2xs font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase"
+        >
+          Research themes
+        </h2>
+        <ol class="mt-4 space-y-1">
+          {
+            themes.map((theme, i) => (
+              <li>
+                <a
+                  href={`#${theme.id}`}
+                  class="flex gap-3 rounded-md px-3 py-2.5 text-sm text-[var(--color-ink-muted)] transition-colors duration-[var(--duration-micro)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-brand)]"
+                >
+                  <span class="font-bold text-[var(--color-brand)] tabular-nums">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span>{theme.title}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Themes -->
+  <div class="border-t border-[var(--color-line)]">
+    {
+      themes.map((theme, i) => (
+        <section
+          id={theme.id}
+          class:list={[
+            'border-b border-[var(--color-line)] py-14 md:py-20',
+            i % 2 === 1 && 'bg-[var(--color-surface-2)]',
+          ]}
+        >
+          <div class="container-page">
+            <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+              <div class:list={[i % 2 === 1 && 'lg:order-2']}>
+                <p class="text-2xs font-sans font-bold tracking-[0.16em] text-[var(--color-brand)] uppercase tabular-nums">
+                  Theme {String(i + 1).padStart(2, '0')}
+                </p>
+                <h2 class="mt-3 text-3xl">{theme.title}</h2>
+                <div class="prose-page mt-5">
+                  {theme.body.map((para) => (
+                    <p>{para}</p>
+                  ))}
+                </div>
+
+                <h3 class="text-2xs mt-8 font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase">
+                  Key publications
+                </h3>
+                <ul class="mt-3 space-y-2.5">
+                  {theme.keyPublications.map((n) => {
+                    const pub = byNumber.get(n);
+                    if (!pub) return null;
+                    return (
+                      <li class="text-sm leading-snug">
+                        {pub.pdf ? (
+                          <ExternalLink href={pub.pdf}>
+                            {pub.authors.split(',')[0]?.replace(/^[#^$]/, '')} et al.
+                            {pub.year ? ` (${pub.year})` : ''}
+                          </ExternalLink>
+                        ) : (
+                          <span class="font-bold text-[var(--color-ink)]">
+                            {pub.authors.split(',')[0]?.replace(/^[#^$]/, '')} et al.
+                          </span>
+                        )}
+                        <span class="text-[var(--color-ink-muted)]">
+                          {' — '}
+                          {pub.title}. <span class="italic">{pub.journal}</span>
+                          {pub.status ? ` (${pub.status})` : ''}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              <figure class:list={[i % 2 === 1 && 'lg:order-1']}>
+                <Image
+                  src={theme.image}
+                  alt={theme.imageAlt}
+                  widths={[480, 720, 1080]}
+                  sizes="(min-width: 1024px) 560px, 92vw"
+                  quality={74}
+                  loading="lazy"
+                  fetchpriority="low"
+                  class="aspect-[4/3] w-full rounded-lg object-cover"
+                />
+              </figure>
+            </div>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <div class="container-page py-14">
+    <p class="text-[var(--color-ink-muted)]">
+      A complete, numbered list of the group's work — with peer reviews where they are public — is
+      on the{' '}
+      <a
+        href={href('/publications')}
+        class="font-bold text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+        >publications page</a
+      >.
+    </p>
+  </div>
+</PageLayout>

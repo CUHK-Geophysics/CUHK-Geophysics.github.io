@@ -1,0 +1,119 @@
+---
+import { Image } from 'astro:assets';
+
+import logo from '@/assets/brand/logo.png';
+import { contact, nav, piEmail, site } from '@/lib/site';
+import { href } from '@/lib/url';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-[var(--color-line)] bg-[var(--color-surface-2)]">
+  <div class="container-page py-12 md:py-16">
+    <div class="grid gap-10 md:grid-cols-3 md:gap-8">
+      <!-- Identity -->
+      <div>
+        <div class="flex items-start gap-3">
+          <Image
+            src={logo}
+            alt=""
+            width={48}
+            height={48}
+            densities={[1, 2]}
+            loading="lazy"
+            class="size-12 shrink-0"
+            aria-hidden="true"
+          />
+          <div>
+            <p class="font-serif text-lg font-semibold text-[var(--color-ink)]">
+              {site.longName}
+            </p>
+            <p class="text-sm text-[var(--color-ink-muted)]">{site.tagline}</p>
+          </div>
+        </div>
+        <p class="mt-4 max-w-xs text-sm text-[var(--color-ink-muted)]">
+          <a
+            href={site.department.url}
+            class="underline decoration-1 underline-offset-2 hover:text-[var(--color-brand)]"
+          >
+            {site.department.name}
+          </a>{', '}
+          <a
+            href={site.university.url}
+            class="underline decoration-1 underline-offset-2 hover:text-[var(--color-brand)]"
+          >
+            {site.university.name}
+          </a>
+        </p>
+      </div>
+
+      <!-- Navigation -->
+      <div>
+        <h2
+          class="text-2xs font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase"
+        >
+          Explore
+        </h2>
+        <ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm">
+          <li>
+            <a
+              href={href('/')}
+              class="text-[var(--color-ink-muted)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand)]"
+              >Home</a
+            >
+          </li>
+          {
+            nav.map((item) => (
+              <li>
+                <a
+                  href={href(item.href)}
+                  class="text-[var(--color-ink-muted)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand)]"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h2
+          class="text-2xs font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase"
+        >
+          Find us
+        </h2>
+        <address class="mt-4 text-sm leading-relaxed text-[var(--color-ink-muted)] not-italic">
+          {contact.lab.room}<br />
+          {contact.lab.building}<br />
+          {contact.lab.campus}<br />
+          {contact.lab.district}, {contact.lab.region}
+        </address>
+        <p class="mt-3 text-sm">
+          <a
+            href={`mailto:${piEmail}`}
+            class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+          >
+            {piEmail}
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="mt-12 flex flex-col gap-3 border-t border-[var(--color-line)] pt-6 text-xs text-[var(--color-ink-subtle)] sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {year} {site.longName}, {site.university.name}.</p>
+      <p>
+        This website is open source and available on{' '}
+        <a
+          href={site.repo}
+          rel="noopener"
+          class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+          >GitHub</a
+        >.
+      </p>
+    </div>
+  </div>
+</footer>

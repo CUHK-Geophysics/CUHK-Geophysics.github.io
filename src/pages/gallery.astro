@@ -1,0 +1,198 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+
+import { photos } from '@/data/gallery';
+import PageLayout from '@/layouts/PageLayout.astro';
+---
+
+<PageLayout
+  title="Gallery"
+  heading="Gallery"
+  eyebrow="In the field"
+  lead="Fieldwork, research cruises and group life — from fumarole fields in Taiwan to the deck of a submersible support ship in the northeast Pacific."
+  description="Photographs from CUHK Geophysics Laboratory fieldwork and research cruises."
+>
+  <!-- Grid. Selecting any photograph opens the viewer, which steps through the
+       whole set — so this page does not also carry a carousel copy of every
+       image, which would double its payload for no new content. -->
+  <div class="container-page py-12 md:py-16">
+    <p class="text-sm text-[var(--color-ink-subtle)]">
+      {photos.length} photographs. Select any one to open the viewer and step through the set.
+    </p>
+    <ul class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        photos.map((photo, i) => (
+          <li>
+            <button
+              type="button"
+              class="group block w-full cursor-pointer overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] text-left transition-colors duration-[var(--duration-base)] hover:border-[var(--color-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]"
+              data-lightbox-open={i}
+            >
+              <span class="block aspect-[4/3] overflow-hidden bg-[var(--color-surface-3)]">
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  widths={[400, 640, 900]}
+                  sizes="(min-width: 1024px) 380px, (min-width: 640px) 44vw, 92vw"
+                  quality={72}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={i === 0 ? 'high' : 'low'}
+                  class="h-full w-full object-cover transition-transform duration-[var(--duration-slow)] ease-[var(--ease-out-quart)] group-hover:scale-[1.03]"
+                />
+              </span>
+              <span class="flex items-start justify-between gap-3 p-4">
+                <span class="text-sm leading-snug font-medium text-[var(--color-ink)]">
+                  {photo.caption}
+                </span>
+                <Icon
+                  name="lucide:maximize-2"
+                  class="mt-0.5 size-4 shrink-0 text-[var(--color-ink-subtle)] group-hover:text-[var(--color-brand)]"
+                  aria-hidden="true"
+                />
+                <span class="sr-only">— view larger</span>
+              </span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <!-- Lightbox -->
+  <dialog
+    id="lightbox"
+    class="fixed inset-0 z-50 m-0 h-dvh max-h-none w-screen max-w-none bg-[rgb(9_9_13)] p-0 backdrop:bg-[rgb(9_9_13)]"
+    aria-label="Photograph viewer"
+  >
+    <div class="relative flex h-full flex-col">
+      <div class="flex shrink-0 items-center justify-between gap-4 p-3 sm:p-4">
+        <p class="text-sm text-white/70 tabular-nums" data-lb-counter></p>
+        <button
+          type="button"
+          data-lb-close
+          class="inline-flex size-11 cursor-pointer items-center justify-center rounded-full text-white/80 transition-colors duration-[var(--duration-micro)] hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          <span class="sr-only">Close viewer</span>
+          <Icon name="lucide:x" class="size-6" aria-hidden="true" />
+        </button>
+      </div>
+
+      <div class="relative flex min-h-0 flex-1 items-center justify-center px-3 sm:px-16">
+        <img
+          data-lb-image
+          alt=""
+          class="max-h-full max-w-full object-contain"
+          width="1600"
+          height="1200"
+        />
+        <button
+          type="button"
+          data-lb-prev
+          class="absolute top-1/2 left-1 inline-flex size-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-[var(--duration-micro)] hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:left-3"
+        >
+          <span class="sr-only">Previous photograph</span>
+          <Icon name="lucide:chevron-left" class="size-6" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          data-lb-next
+          class="absolute top-1/2 right-1 inline-flex size-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-[var(--duration-micro)] hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-3"
+        >
+          <span class="sr-only">Next photograph</span>
+          <Icon name="lucide:chevron-right" class="size-6" aria-hidden="true" />
+        </button>
+      </div>
+
+      <p class="shrink-0 px-4 py-5 text-center text-sm text-white sm:text-base" data-lb-caption></p>
+    </div>
+  </dialog>
+
+  <!-- Photo metadata for the lightbox, emitted as data rather than markup. -->
+  <script
+    type="application/json"
+    id="gallery-data"
+    is:inline
+    set:html={JSON.stringify(
+      photos.map((p) => ({
+        src: p.src.src,
+        width: p.src.width,
+        height: p.src.height,
+        alt: p.alt,
+        caption: p.caption,
+      }))
+    )}
+  />
+</PageLayout>
+
+<script>
+  interface Item {
+    src: string;
+    width: number;
+    height: number;
+    alt: string;
+    caption: string;
+  }
+
+  const dialog = document.querySelector<HTMLDialogElement>('#lightbox');
+  const dataEl = document.querySelector<HTMLScriptElement>('#gallery-data');
+
+  if (dialog && dataEl?.textContent) {
+    const items: Item[] = JSON.parse(dataEl.textContent);
+    const img = dialog.querySelector<HTMLImageElement>('[data-lb-image]')!;
+    const caption = dialog.querySelector<HTMLElement>('[data-lb-caption]')!;
+    const counter = dialog.querySelector<HTMLElement>('[data-lb-counter]')!;
+    const closeBtn = dialog.querySelector<HTMLButtonElement>('[data-lb-close]')!;
+
+    let index = 0;
+
+    const show = (i: number) => {
+      index = (i + items.length) % items.length;
+      const item = items[index]!;
+      img.src = item.src;
+      img.alt = item.alt;
+      img.width = item.width;
+      img.height = item.height;
+      caption.textContent = item.caption;
+      counter.textContent = `${index + 1} of ${items.length}`;
+    };
+
+    for (const trigger of document.querySelectorAll<HTMLElement>('[data-lightbox-open]')) {
+      trigger.addEventListener('click', () => {
+        show(Number(trigger.dataset['lightboxOpen']));
+        dialog.showModal();
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+      });
+    }
+
+    const close = () => {
+      dialog.close();
+      document.body.style.overflow = '';
+    };
+
+    closeBtn.addEventListener('click', close);
+    dialog.querySelector('[data-lb-prev]')?.addEventListener('click', () => show(index - 1));
+    dialog.querySelector('[data-lb-next]')?.addEventListener('click', () => show(index + 1));
+
+    // Native <dialog> already traps focus and handles Escape; add arrow keys.
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        show(index - 1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + 1);
+      }
+    });
+
+    dialog.addEventListener('close', () => {
+      document.body.style.overflow = '';
+    });
+
+    // Clicking the backdrop area (outside the image column) closes the viewer.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) close();
+    });
+  }
+</script>

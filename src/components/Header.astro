@@ -1,0 +1,228 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+
+import logo from '@/assets/brand/logo.png';
+import ThemeToggle from '@/components/ThemeToggle.astro';
+import { nav, site } from '@/lib/site';
+import { href, isActive } from '@/lib/url';
+
+const path = Astro.url.pathname;
+---
+
+<a
+  href="#main"
+  class="sr-only rounded-md bg-[var(--color-surface)] px-4 py-2 text-[var(--color-brand)] underline focus-visible:not-sr-only focus-visible:absolute focus-visible:top-3 focus-visible:left-3 focus-visible:z-50"
+>
+  Skip to main content
+</a>
+
+<header
+  id="site-header"
+  class="sticky top-0 z-40 bg-[#750f6d] text-white transition-shadow duration-[var(--duration-base)] dark:bg-[#4a1a5c]"
+  data-header
+>
+  <div class="container-page">
+    <div class="flex h-16 items-center gap-3 md:h-[4.5rem]">
+      <!-- Brand -->
+      <a
+        href={href('/')}
+        class="group -mx-2 flex min-w-0 items-center gap-2.5 rounded-md px-2 py-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      >
+        <Image
+          src={logo}
+          alt=""
+          width={40}
+          height={40}
+          densities={[1, 2]}
+          loading="eager"
+          fetchpriority="high"
+          class="size-9 shrink-0 md:size-10"
+          aria-hidden="true"
+        />
+        <span class="min-w-0 leading-tight">
+          <span class="block truncate font-serif text-[1.0625rem] font-semibold md:text-lg">
+            {site.longName}
+          </span>
+          <span class="text-2xs block truncate tracking-[0.14em] text-white/75 uppercase">
+            {site.university.shortName}
+          </span>
+        </span>
+      </a>
+
+      <!-- Desktop navigation -->
+      <nav class="ml-auto hidden lg:block" aria-label="Primary">
+        <ul class="flex items-center gap-0.5">
+          {
+            nav.map((item) => {
+              const active = isActive(path, item.href);
+              return (
+                <li>
+                  <a
+                    href={href(item.href)}
+                    aria-current={active ? 'page' : undefined}
+                    class:list={[
+                      'relative block rounded-md px-3 py-2 text-[0.9375rem] transition-colors duration-[var(--duration-micro)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white',
+                      active
+                        ? 'bg-white/15 font-bold text-white after:absolute after:inset-x-3 after:-bottom-px after:h-0.5 after:rounded-full after:bg-white'
+                        : 'text-white/85 hover:bg-white/10 hover:text-white',
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+
+      <div class="ml-auto flex items-center gap-1 lg:ml-2">
+        <ThemeToggle />
+        <button
+          type="button"
+          id="nav-open"
+          class="inline-flex size-11 cursor-pointer items-center justify-center rounded-md text-white/85 transition-colors duration-[var(--duration-micro)] hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:hidden"
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+        >
+          <span class="sr-only">Open navigation menu</span>
+          <Icon name="lucide:menu" class="size-6" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile navigation drawer -->
+<div
+  id="mobile-nav"
+  class="fixed inset-0 z-50 hidden lg:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Site navigation"
+>
+  <div class="absolute inset-0 bg-black/60" data-nav-backdrop></div>
+  <nav
+    class="absolute inset-y-0 right-0 flex w-[min(20rem,85vw)] flex-col overflow-y-auto bg-[var(--color-surface)] shadow-2xl"
+    aria-label="Primary"
+  >
+    <div
+      class="flex h-16 shrink-0 items-center justify-between border-b border-[var(--color-line)] px-4"
+    >
+      <span class="font-serif text-lg font-semibold">Menu</span>
+      <button
+        type="button"
+        id="nav-close"
+        class="inline-flex size-11 cursor-pointer items-center justify-center rounded-md text-[var(--color-ink-muted)] transition-colors duration-[var(--duration-micro)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-ink)]"
+      >
+        <span class="sr-only">Close navigation menu</span>
+        <Icon name="lucide:x" class="size-6" aria-hidden="true" />
+      </button>
+    </div>
+    <ul class="flex flex-col gap-1 p-3">
+      <li>
+        <a
+          href={href('/')}
+          aria-current={isActive(path, '/') ? 'page' : undefined}
+          class:list={[
+            'block rounded-md px-3 py-3 text-base',
+            isActive(path, '/')
+              ? 'bg-[var(--color-brand-wash)] font-bold text-[var(--color-brand)]'
+              : 'text-[var(--color-ink)] hover:bg-[var(--color-surface-2)]',
+          ]}
+        >
+          Home
+        </a>
+      </li>
+      {
+        nav.map((item) => {
+          const active = isActive(path, item.href);
+          return (
+            <li>
+              <a
+                href={href(item.href)}
+                aria-current={active ? 'page' : undefined}
+                class:list={[
+                  'block rounded-md px-3 py-3 text-base',
+                  active
+                    ? 'bg-[var(--color-brand-wash)] font-bold text-[var(--color-brand)]'
+                    : 'text-[var(--color-ink)] hover:bg-[var(--color-surface-2)]',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+</div>
+
+<script>
+  /* ---- sticky-header elevation on scroll ---- */
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  if (header) {
+    const sync = () => header.classList.toggle('shadow-lg', window.scrollY > 8);
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+  }
+
+  /* ---- mobile drawer: focus trap, Escape, scroll lock ---- */
+  const drawer = document.getElementById('mobile-nav');
+  const openBtn = document.getElementById('nav-open');
+  const closeBtn = document.getElementById('nav-close');
+  const backdrop = drawer?.querySelector('[data-nav-backdrop]');
+
+  if (drawer && openBtn && closeBtn) {
+    const FOCUSABLE = 'a[href], button:not([disabled])';
+    let lastFocused: HTMLElement | null = null;
+
+    const open = () => {
+      lastFocused = document.activeElement as HTMLElement;
+      drawer.classList.remove('hidden');
+      openBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+      document.addEventListener('keydown', onKeydown);
+    };
+
+    const close = () => {
+      drawer.classList.add('hidden');
+      openBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKeydown);
+      lastFocused?.focus();
+    };
+
+    function onKeydown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        close();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const items = [...drawer!.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
+        (el) => el.offsetParent !== null
+      );
+      if (items.length === 0) return;
+      const first = items[0]!;
+      const last = items[items.length - 1]!;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    backdrop?.addEventListener('click', close);
+    // Close when the viewport grows past the breakpoint that hides the drawer.
+    window.matchMedia('(min-width: 64rem)').addEventListener('change', (e) => {
+      if (e.matches && !drawer.classList.contains('hidden')) close();
+    });
+  }
+</script>

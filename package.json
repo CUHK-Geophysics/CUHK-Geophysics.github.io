@@ -1,0 +1,38 @@
+{
+  "name": "cuhk-geophysics-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Website of the Geophysics Laboratory at the Department of Earth and Environmental Sciences, The Chinese University of Hong Kong.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "contrast": "node scripts/check-contrast.mjs"
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/sitemap": "^3.7.3",
+    "@fontsource-variable/crimson-pro": "^5.3.0",
+    "@fontsource/atkinson-hyperlegible": "^5.3.0",
+    "@iconify-json/lucide": "^1.2.126",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.7",
+    "astro-icon": "^1.2.0",
+    "sharp": "^0.35.4",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.8.1"
+  }
+}

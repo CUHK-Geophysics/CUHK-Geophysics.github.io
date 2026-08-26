@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches-ignore: ['main']
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Formatting
+        run: npm run format:check
+
+      - name: Types and Astro diagnostics
+        run: npm run check
+
+      - name: Colour-token contrast audit
+        run: npm run contrast
+
+      - name: Build at a domain root
+        run: npm run build
+
+      # The most likely GitHub Pages regression is an asset or link that only
+      # resolves at '/', so build once under a sub-path too.
+      - name: Build under a repository sub-path
+        env:
+          PAGES_URL: https://example.github.io
+          PAGES_BASE: /CUHK-Geophysics.github.io
+        run: npm run build
+
+      - name: Assert no root-absolute asset URLs escaped the base path
+        run: |
+          if grep -rlE '(src|href)="/(_astro|favicon|apple-touch|og-image)' dist; then
+            echo "Found asset URLs that ignore the deploy base path." >&2
+            exit 1
+          fi

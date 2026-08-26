@@ -1,0 +1,87 @@
+---
+/**
+ * Three-state colour-scheme control: system → light → dark.
+ *
+ * Rendered as a single button rather than a radio group so it stays a
+ * one-tap 44x44 target on mobile; the current state is announced through the
+ * accessible name, which is updated alongside the icon.
+ */
+import { Icon } from 'astro-icon/components';
+---
+
+<button
+  type="button"
+  id="theme-toggle"
+  class="inline-flex size-11 cursor-pointer items-center justify-center rounded-md text-[var(--color-on-brand)]/85 transition-colors duration-[var(--duration-micro)] hover:bg-white/10 hover:text-[var(--color-on-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+  data-state="system"
+  aria-live="polite"
+  title="Change colour theme"
+>
+  <span class="sr-only" data-theme-label>Colour theme: follow system</span>
+  <Icon name="lucide:monitor" class="size-5" data-theme-icon="system" aria-hidden="true" />
+  <Icon name="lucide:sun" class="hidden size-5" data-theme-icon="light" aria-hidden="true" />
+  <Icon name="lucide:moon" class="hidden size-5" data-theme-icon="dark" aria-hidden="true" />
+</button>
+
+<script>
+  const KEY = 'cuhk-geophysics-theme';
+  type Mode = 'system' | 'light' | 'dark';
+  const ORDER: Mode[] = ['system', 'light', 'dark'];
+  const LABEL: Record<Mode, string> = {
+    system: 'Colour theme: follow system. Activate for light theme.',
+    light: 'Colour theme: light. Activate for dark theme.',
+    dark: 'Colour theme: dark. Activate to follow the system.',
+  };
+
+  const button = document.getElementById('theme-toggle');
+  if (button) {
+    const label = button.querySelector<HTMLElement>('[data-theme-label]');
+    const icons = new Map<Mode, HTMLElement>(
+      ORDER.map((m) => [m, button.querySelector<HTMLElement>(`[data-theme-icon="${m}"]`)!])
+    );
+
+    const read = (): Mode => {
+      try {
+        const v = localStorage.getItem(KEY);
+        return v === 'light' || v === 'dark' ? v : 'system';
+      } catch {
+        return 'system';
+      }
+    };
+
+    const paint = (mode: Mode) => {
+      const root = document.documentElement;
+      root.classList.remove('light', 'dark');
+      if (mode !== 'system') root.classList.add(mode);
+
+      const isDark =
+        mode === 'dark' ||
+        (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document
+        .querySelector('meta[name="theme-color"]')
+        ?.setAttribute('content', isDark ? '#121218' : '#750f6d');
+
+      button.dataset['state'] = mode;
+      if (label) label.textContent = LABEL[mode];
+      for (const [m, el] of icons) el.classList.toggle('hidden', m !== mode);
+    };
+
+    paint(read());
+
+    button.addEventListener('click', () => {
+      const next = ORDER[(ORDER.indexOf(read()) + 1) % ORDER.length]!;
+      try {
+        if (next === 'system') localStorage.removeItem(KEY);
+        else localStorage.setItem(KEY, next);
+      } catch {
+        /* Persisting is best-effort; the class change still applies. */
+      }
+      paint(next);
+    });
+
+    // Follow the OS while in system mode.
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', () => read() === 'system' && paint('system'));
+  }
+</script>
