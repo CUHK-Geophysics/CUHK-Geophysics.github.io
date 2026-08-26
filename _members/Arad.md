@@ -13,7 +13,7 @@ description: "Mahdi (Arad) graduated from Kharazmi University with a degree in G
 
 pronouns: he/his/his
 website: https://aradfarahani.com/ #Enter your personal/professional website
-CUHK: https://www.ees.cuhk.edu.hk/staff/farmahinifarahani-mahdi-arad/
+CUHK: farmahinifarahani-mahdi-arad
 twitter: aradfarahani
 linkedin: aradfarahani
 github: aradfarahani
