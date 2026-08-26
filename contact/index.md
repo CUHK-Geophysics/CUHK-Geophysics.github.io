@@ -25,6 +25,7 @@ group: contact
   Associate Professor<br>
   [Department of Earth and Environmental Sciences](https://www.ees.cuhk.edu.hk)<br>
   [The Chinese University of Hong Kong](https://www.cuhk.edu.hk)<br>
+  Room 317, 3/F
   Mong Man Wai Building, CUHK<br>
   Sha Tin, New Territories, Hong Kong SAR<br>
   email: yjtan (at) cuhk.edu.hk
