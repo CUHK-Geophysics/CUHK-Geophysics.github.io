@@ -1,0 +1,344 @@
+---
+title: Publications from the Fraser Lab
+layout: default
+group: publications
+---
+<h1>Publications</h1>
+
+<div class="pub-filters" style="margin-bottom: 20px;">
+	<div style="margin-bottom: 10px;">
+		<strong>Filter:</strong>
+		<button class="btn btn-sm btn-outline-primary pub-filter active" data-filter="all">All Publications</button>
+		<button class="btn btn-sm btn-outline-primary pub-filter" data-filter="key">Key Publications</button>
+	</div>
+	<div id="tag-filters" style="display: none;">
+		<strong>Topics:</strong>
+		{% for tag in site.data.publication_tags %}
+		<button class="btn btn-sm btn-outline-secondary tag-filter" data-tag="{{ tag.name }}">{{ tag.name }}</button>
+		{% endfor %}
+	</div>
+</div>
+
+<div class="container-fluid">
+
+{% assign sorted = site.publications | sort: "pub_date" | reverse %}
+{% for publication in sorted %}
+
+{% comment %}
+Key publications have a Fraser lab member (bolded with **) as first, co-first, or last author.
+Co-first authors are marked with &#42; so we check for &#42;** which indicates a bolded co-first.
+{% endcomment %}
+{% assign first_two = publication.authors | slice: 0, 2 %}
+{% assign authors_length = publication.authors | size %}
+{% assign last_pos = authors_length | minus: 1 %}
+{% assign second_last_pos = authors_length | minus: 2 %}
+{% assign last_char = publication.authors | slice: last_pos, 1 %}
+{% assign second_last_char = publication.authors | slice: second_last_pos, 1 %}
+{% assign is_key = false %}
+{% if first_two == "**" %}
+	{% assign is_key = true %}
+{% elsif last_char == "*" and second_last_char == "*" %}
+	{% assign is_key = true %}
+{% elsif publication.authors contains "&#42;**" %}
+	{% assign is_key = true %}
+{% endif %}
+
+{% comment %}Build tags string for data attribute{% endcomment %}
+{% assign tags_str = "" %}
+{% if publication.tags %}
+	{% assign tags_str = publication.tags | join: "," %}
+{% endif %}
+
+<hr class="pub-entry" data-key="{{is_key}}" data-tags="{{tags_str}}">
+<div class="row pub-entry" style="padding-top: 60px; margin-top: -60px;" id="{{publication.pmid}}" data-key="{{is_key}}" data-tags="{{tags_str}}">
+	<div>
+		<h5>{{ publication.title | markdownify  | remove: '<p>' | remove: '</p>'}}</h5>
+		<h6>{{ publication.authors | markdownify | remove: '<p>' | remove: '</p>' }}</h6>
+		{% if publication.journal %}
+			<i>{{ publication.journal }},</i>
+			{{publication.pub_date | split: "-" | first }}
+		{% else %}
+			{% if publication.biorxiv %}
+			<i>Biorxiv,</i>
+				{{publication.pub_date | split: "-" | first }}
+			{% elsif publication.chemrxiv %}
+			<i>ChemRxiv,</i>
+				{{publication.pub_date | split: "-" | first }}
+			{% elsif publication.preprints %}
+			<i>Preprints.org,</i>
+				{{publication.pub_date | split: "-" | first }}
+			{% elsif publication.stacks %}
+			<i>The Stacks,</i>
+				{{publication.pub_date | split: "-" | first }}
+			{% else %}
+			<i>Preprint,</i>
+				{{publication.pub_date | split: "-" | first }}
+			{% endif %}
+		{% endif %}
+	</div>
+</div>
+
+<div class="row pub-entry" style="padding-top: 20px; margin-top: -20px" data-key="{{is_key}}" data-tags="{{tags_str}}">
+	<div class="col-sm-6">
+		<img class = "img-fluid" src = "{{publication.image}}" alt =  "Key Figure" style="max-height: 200px;" loading="lazy" decoding="async">
+	</div>
+	<ul class="col-sm-6">
+		<br>
+		<h6>Access the paper</h6>
+		<!--PMID-->
+		{% if publication.pmid %}
+		<li>PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/{{publication.pmid}}" title = "PubMed: {{publication.pmid}} (opens in new tab)" target="_blank"> {{publication.pmid}}</a></li>
+		{% endif %}
+
+		<!--PMCID - optional -->
+		{% if publication.pmcid %}
+		<li>PMCID: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/{{publication.pmcid}}" title = "PubMed Central: {{publication.pmcid}} (opens in new tab)" target="_blank"> {{publication.pmcid}}</a></li>
+		{% endif %}
+
+		<!--Biorxiv - optional -->
+			{% if publication.biorxiv %}
+			{% assign bval = publication.biorxiv %}
+			{% if bval contains 'http' or bval contains 'doi' %}
+			<li>BioRxiv Preprint: <a href="{{ bval }}" title =  "BioRxiv Preprint: {{bval}} (opens in new tab)" target="_blank">{{ bval }}</a></li>
+			{% else %}
+						{% assign has_dot = bval contains '.' %}
+						{% if has_dot %}
+						{% assign parts = bval | split: '.' %}
+						{% if parts.size >= 3 %}
+							{% assign date_string = parts[0] | append: '.' | append: parts[1] | append: '.' | append: parts[2] %}
+							{% assign biorxiv_base = bval %}
+							{% if date_string > '2025.12.01' %}
+							<li>BioRxiv Preprint: <a href="https://doi.org/10.64898/{{biorxiv_base}}" title =  "BioRxiv Preprint: {{bval}} (opens in new tab)" target="_blank"> {{biorxiv_base | split: "." | last }}</a></li>
+							{% else %}
+							<li>BioRxiv Preprint: <a href="https://doi.org/10.1101/{{biorxiv_base}}" title =  "BioRxiv Preprint: {{bval}} (opens in new tab)" target="_blank"> {{biorxiv_base | split: "." | last }}</a></li>
+							{% endif %}
+						{% else %}
+							{% assign biorxiv_base = bval %}
+							<li>BioRxiv Preprint: <a href="https://doi.org/10.1101/{{biorxiv_base}}" title =  "BioRxiv Preprint: {{bval}} (opens in new tab)" target="_blank"> {{biorxiv_base}}</a></li>
+						{% endif %}
+						{% else %}
+						{% assign biorxiv_base = bval %}
+						<li>BioRxiv Preprint: <a href="https://doi.org/10.1101/{{biorxiv_base}}" title =  "BioRxiv Preprint: {{bval}} (opens in new tab)" target="_blank"> {{biorxiv_base}}</a></li>
+						{% endif %}
+			{% endif %}
+			{% endif %}
+
+		<!--Arxiv - optional -->
+		{% if publication.arxiv %}
+		<li>arXiv Preprint: <a href="https://arxiv.org/abs/{{publication.arxiv}}" title = "aRxiv Preprint: {{publication.arxiv}} (opens in new tab)" target="_blank"> {{publication.arxiv}}</a></li>
+		{% endif %}
+
+		<!--Chemrxiv - optional -->
+		{% if publication.chemrxiv %}
+			{% assign filename_parts = publication.id | split: "/" %}
+			{% assign filename = filename_parts | last %}
+			{% assign year_prefix = filename | slice: 0, 4 | plus: 0 %}
+			{% if year_prefix >= 2026 %}
+		<li>ChemRxiv Preprint: <a href="https://doi.org/10.26434/chemrxiv.{{publication.chemrxiv}}/v1" title = "ChemRxiv Preprint: {{publication.chemrxiv}} (opens in new tab)" target="_blank"> {{publication.chemrxiv}}</a></li>
+			{% else %}
+		<li>ChemRxiv Preprint: <a href="https://doi.org/10.26434/chemrxiv-{{publication.chemrxiv}}" title = "ChemRxiv Preprint: {{publication.chemrxiv}} (opens in new tab)" target="_blank"> {{publication.chemrxiv}}</a></li>
+			{% endif %}
+		{% endif %}
+
+		<!--Preprints.org - optional -->
+		{% if publication.preprints %}
+		<li>Preprints.org Preprint: <a href="https://www.preprints.org/manuscript/{{publication.preprints}}" title = "Preprints.org Preprint: {{publication.preprints}} (opens in new tab)" target="_blank"> {{publication.preprints}}</a></li>
+		{% endif %}
+
+		<!--The Stacks - optional -->
+		{% if publication.stacks %}
+		<li>The Stacks: <a href="https://thestacks.org/publications/{{publication.stacks.slug}}" title = "The Stacks: {{publication.stacks.slug}} (opens in new tab)" target="_blank"> {{publication.stacks.slug}}</a>{% if publication.stacks.doi %} (<a href="https://doi.org/{{publication.stacks.doi}}" title = "DOI: {{publication.stacks.doi}} (opens in new tab)" target="_blank">doi: {{publication.stacks.doi}}</a>){% endif %}</li>
+		{% endif %}
+
+		<!-- PDF -->
+		{% if publication.journal %}
+			{% if publication.pdf %}
+		<li><a href="{{publication.pdf}}" title = "PDF for {{publication.title}} (opens in new tab)" target="_blank"> Full Text</a></li>
+			{% endif %}
+		{% endif %}
+
+		<!--OSF - optional -->
+		{% if publication.osf %}
+		<li>OSF Preprint: <a href="https://osf.io/{{publication.osf}}" title = "OSF Preprint: {{publication.osf}} (opens in new tab)" target="_blank"> {{publication.osf}}</a></li>
+		{% endif %}
+
+		<!-- SBGrid Datasets - optional -->
+		{% if publication.data %}
+		<li>Online Dataset{% if publication.data.size > 1 %}s{% endif %}:
+			{% if publication.data.size > 1 %}
+			<ul>
+				{% for dataset in publication.data %}
+				<li><a href="http://dx.doi.org/{{dataset}}" title =  "SBGrid Data Repository (opens in new tab)" target="_blank">doi: {{dataset}}</a></li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<a href="http://dx.doi.org/{{publication.data}}" title =  "SBGrid Data Repository (opens in new tab)" target="_blank">doi: {{publication.data}}</a>
+			{% endif %}
+		</li>
+		{% endif %}
+
+		<!--PDBs - optional-->
+		{% if publication.pdbs %}
+		<li>Deposited Structure{% if publication.pdbs.size > 1 %}s{% endif %}:
+			{% for code in publication.pdbs %}
+			<a href="http://www.rcsb.org/pdb/explore/explore.do?structureId={{code}}" title =  "PDB: {{code}} (opens in new tab)" target="_blank">{{code}}</a>{% unless forloop.last %}, {% endunless %}
+			{% endfor %}
+		</li>
+		{% endif %}
+
+		<!--EMDBs - optional-->
+		{% if publication.emdbs %}
+		<li>Deposited Map{% if publication.emdbs.size > 1 %}s{% endif %}:
+			{% for code in publication.emdbs %}
+			<a href="http://www.ebi.ac.uk/pdbe/entry/emdb/EMD-{{code}}" title =  "EMDB: {{code}} (opens in new tab)" target="_blank">{{code}}</a>{% unless forloop.last %}, {% endunless %}
+			{% endfor %}
+		</li>
+		{% endif %}
+
+		<!--pairs of maps and models - optional-->
+		{% if publication.paired_maps_and_models %}
+		<li>Deposited Structure{% if publication.paired_maps_and_models.size > 1 %}s{% endif %} and Map{% if publication.paired_maps_and_models.size > 1 %}s{% endif %}:
+			{% for pair in publication.paired_maps_and_models %}
+			<a href="http://www.rcsb.org/pdb/explore/explore.do?structureId={{pair.pdb}}" title =  "PDB and Map pair: {{pair.pdb}} (opens in new tab)" target="_blank">{{pair.pdb}}</a>/<a href="http://www.ebi.ac.uk/pdbe/entry/emdb/EMD-{{pair.emdb}}">{{pair.emdb}}</a>{% unless forloop.last %}, {% endunless %}
+			{% endfor %}
+		</li>
+		{% endif %}
+
+		<!--maps and models and datasets - optional-->
+		{% if publication.paired_maps_and_models_and_data %}
+		<li>Deposited Structure{% if publication.paired_maps_and_models_and_data.size > 1 %}s{% endif %}, Map{% if publication.paired_maps_and_models_and_data.size > 1 %}s{% endif %}, and Data set{% if publication.paired_maps_and_models_and_data.size > 1 %}s{% endif %}:
+			{% for pair in publication.paired_maps_and_models_and_data %}
+			<a href="http://www.rcsb.org/pdb/explore/explore.do?structureId={{pair.pdb}}" title =  "PDB and Map pair: {{pair.pdb}} (opens in new tab)" target="_blank">{{pair.pdb}}</a>/<a href="http://www.ebi.ac.uk/pdbe/entry/emdb/EMD-{{pair.emdb}}">{{pair.emdb}}</a>/<a href="https://empiar.org/{{pair.empiar}}/">{{pair.empiar}}</a>{% unless forloop.last %}, {% endunless %}
+			{% endfor %}
+		</li>
+		{% endif %}
+
+		<!--zenodo records - optional-->
+		{% if publication.zenodo %}
+		<li>Zenodo Record{% if publication.zenodo.size > 1 %}s{% endif %}:
+			{% for record in publication.zenodo %}
+			<a href="https://www.zenodo.org/record/{{record.code}}/" title =  "Zenodo: {{record.code}} (opens in new tab)" target="_blank">{{record.code}}</a>{% if record.description %} ({{record.description}}){% endif %}{% unless forloop.last %}, {% endunless %}
+			{% endfor %}
+		</li>
+		{% endif %}
+
+		<!--Github - optional-->
+		{% if publication.github %}
+		<li>{% if publication.github.size > 1 %}GitHub Repositories:{%else%}GitHub Repository:{% endif %}
+			{% for record in publication.github %}
+				<a href="https://www.github.com/{{record.url}}/" alt="GitHub Repository: {{record.url}} (opens in new tab)" target="_blank">{{record.url}}</a>{% if record.description %} ({{record.description}}){% endif %}{% unless forloop.last %}, {% endunless %}
+			{% endfor %}
+		</li>
+		{% endif %}
+
+		<!-- addgene plasmid - optional -->
+		{% if publication.addgene %}
+		<li>Addgene Plasmid{% if publication.addgene.size > 1 %}s{% endif %}:
+			{% for record in publication.addgene %}
+				<a href="https://www.addgene.org/{{record.plasmid}}/" alt="Addgene Plasmid: {{record.plasmid}} (opens in new tab)" target="_blank">{{record.plasmid}}</a>{% if record.description %} ({{record.description}}){% endif %}{% unless forloop.last %}, {% endunless %}
+			{% endfor %}
+		</li>
+		{% endif %}
+
+		<!--additional links - optional-->
+		{% if publication.links %}
+			<br>
+			<h6>Additional Link{% if publication.links.size > 1 %}s{% endif %}</h6>
+			{% for link in publication.links %}
+				<li><a href="{{link.url}}" alt="{{link.name}} (opens in new tab)" target="_blank">{{link.name}}</a></li>
+			{% endfor %}
+		{% endif %}
+	</ul>
+</div>
+<br class="pub-entry" data-key="{{is_key}}" data-tags="{{tags_str}}">
+{% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	var currentFilter = 'all';
+	var currentTag = null;
+
+	// Main filter buttons (All vs Key)
+	document.querySelectorAll('.pub-filter').forEach(function(btn) {
+		btn.addEventListener('click', function() {
+			document.querySelectorAll('.pub-filter').forEach(function(b) {
+				b.classList.remove('active');
+			});
+			this.classList.add('active');
+			currentFilter = this.getAttribute('data-filter');
+
+			// Show/hide tag filters based on selection
+			var tagFilters = document.getElementById('tag-filters');
+			if (currentFilter === 'all') {
+				tagFilters.style.display = 'block';
+			} else {
+				tagFilters.style.display = 'none';
+				currentTag = null;
+				document.querySelectorAll('.tag-filter').forEach(function(b) {
+					b.classList.remove('active');
+				});
+			}
+
+			applyFilters();
+		});
+	});
+
+	// Tag filter buttons
+	document.querySelectorAll('.tag-filter').forEach(function(btn) {
+		btn.addEventListener('click', function() {
+			if (this.classList.contains('active')) {
+				this.classList.remove('active');
+				currentTag = null;
+			} else {
+				document.querySelectorAll('.tag-filter').forEach(function(b) {
+					b.classList.remove('active');
+				});
+				this.classList.add('active');
+				currentTag = this.getAttribute('data-tag');
+			}
+			applyFilters();
+		});
+	});
+
+	function applyFilters() {
+		document.querySelectorAll('.pub-entry').forEach(function(entry) {
+			var isKey = entry.getAttribute('data-key') === 'true';
+			var tags = entry.getAttribute('data-tags') || '';
+			var show = true;
+
+			// Apply main filter
+			if (currentFilter === 'key' && !isKey) {
+				show = false;
+			}
+
+			// Apply tag filter (only when in 'all' mode)
+			if (show && currentFilter === 'all' && currentTag) {
+				if (tags.indexOf(currentTag) === -1) {
+					show = false;
+				}
+			}
+
+			entry.style.display = show ? '' : 'none';
+		});
+	}
+
+	// Show tag filters by default when viewing all
+	document.getElementById('tag-filters').style.display = 'block';
+});
+</script>
+
+<style>
+.pub-filters .btn {
+	margin: 2px;
+}
+.pub-filters .btn.active {
+	background-color: #052049;
+	color: white;
+	border-color: #052049;
+}
+.tag-filter.active {
+	background-color: #6c757d;
+	color: white;
+}
+</style>
