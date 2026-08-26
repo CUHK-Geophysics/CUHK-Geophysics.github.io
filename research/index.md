@@ -15,7 +15,7 @@ The long-term goals of our research are to understand how protein conformational
 
 <div class="text-center my-4">
 <p><a href="https://www.youtube.com/watch?v=vK6vgPn4V98">Interview - 陳衍佐教授Prof Yen Joe TAN</a></p>
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=vK6vgPn4V98" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/vK6vgPn4V98?si=NpExZ36JDRugLiv5&amp;start=4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
 
 </div>
