@@ -40,6 +40,7 @@ export const principalInvestigator = {
   office: 'Room 317, 3/F, Mong Man Wai Building',
   photo: tanYenJoe,
   links: [
+    { label: 'CUHK profile', href: 'https://www.ees.cuhk.edu.hk/staff/prof-tan-yen-joe/' },
     { label: 'Personal site', href: 'https://tanyenjoe.com' },
     {
       label: 'Google Scholar',

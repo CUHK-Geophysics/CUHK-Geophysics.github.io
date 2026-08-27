@@ -12,10 +12,11 @@ import { published } from '@/data/publications';
 import { themes } from '@/data/research';
 import { members } from '@/data/team';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { contact, piEmail, site } from '@/lib/site';
+import { addressLines, addressOneLine, contact, piEmail, site } from '@/lib/site';
 import { href } from '@/lib/url';
 
 const recent = published.slice(0, 3);
+const labAddress = addressLines(contact.lab.room);
 
 const structuredData = {
   '@context': 'https://schema.org',
@@ -31,7 +32,7 @@ const structuredData = {
   department: { '@type': 'Organization', name: site.department.name, url: site.department.url },
   address: {
     '@type': 'PostalAddress',
-    streetAddress: `${contact.lab.room}, ${contact.lab.building}`,
+    streetAddress: addressOneLine(contact.lab.room),
     addressLocality: contact.lab.district,
     addressRegion: 'Hong Kong SAR',
     addressCountry: 'HK',
@@ -286,17 +287,27 @@ const structuredData = {
           </p>
           <p>{contact.pi.title}</p>
           <address class="mt-4 not-italic">
-            {contact.lab.room}<br />
-            {contact.lab.building}, {contact.lab.campus}<br />
-            {contact.lab.district}, {contact.lab.region}
+            {
+              labAddress.map((line, i) => (
+                <Fragment>
+                  {i > 0 && <br />}
+                  {line}
+                </Fragment>
+              ))
+            }
           </address>
-          <p class="mt-4">
-            <a
-              href={href('/contact')}
-              class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
-              >Directions and full contact details</a
-            >
-          </p>
+          <ul class="mt-4 space-y-1.5">
+            <li>
+              <ExternalLink href={contact.pi.profile}>CUHK faculty profile</ExternalLink>
+            </li>
+            <li>
+              <a
+                href={href('/contact')}
+                class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+                >Directions and full contact details</a
+              >
+            </li>
+          </ul>
         </div>
       </div>
     </div>

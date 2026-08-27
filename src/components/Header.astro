@@ -121,20 +121,6 @@ const path = Astro.url.pathname;
       </button>
     </div>
     <ul class="flex flex-col gap-1 p-3">
-      <li>
-        <a
-          href={href('/')}
-          aria-current={isActive(path, '/') ? 'page' : undefined}
-          class:list={[
-            'block rounded-md px-3 py-3 text-base',
-            isActive(path, '/')
-              ? 'bg-[var(--color-brand-wash)] font-bold text-[var(--color-brand)]'
-              : 'text-[var(--color-ink)] hover:bg-[var(--color-surface-2)]',
-          ]}
-        >
-          Home
-        </a>
-      </li>
       {
         nav.map((item) => {
           const active = isActive(path, item.href);

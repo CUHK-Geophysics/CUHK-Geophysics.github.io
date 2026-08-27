@@ -1,11 +1,13 @@
 ---
 import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
 
 import logo from '@/assets/brand/logo.png';
-import { contact, nav, piEmail, site } from '@/lib/site';
+import { addressLines, contact, nav, piEmail, site } from '@/lib/site';
 import { href } from '@/lib/url';
 
 const year = new Date().getFullYear();
+const labAddress = addressLines(contact.lab.room);
 ---
 
 <footer class="mt-24 border-t border-[var(--color-line)] bg-[var(--color-surface-2)]">
@@ -55,13 +57,6 @@ const year = new Date().getFullYear();
           Explore
         </h2>
         <ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm">
-          <li>
-            <a
-              href={href('/')}
-              class="text-[var(--color-ink-muted)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand)]"
-              >Home</a
-            >
-          </li>
           {
             nav.map((item) => (
               <li>
@@ -85,19 +80,33 @@ const year = new Date().getFullYear();
           Find us
         </h2>
         <address class="mt-4 text-sm leading-relaxed text-[var(--color-ink-muted)] not-italic">
-          {contact.lab.room}<br />
-          {contact.lab.building}<br />
-          {contact.lab.campus}<br />
-          {contact.lab.district}, {contact.lab.region}
+          {
+            labAddress.map((line, i) => (
+              <Fragment>
+                {i > 0 && <br />}
+                {line}
+              </Fragment>
+            ))
+          }
         </address>
-        <p class="mt-3 text-sm">
-          <a
-            href={`mailto:${piEmail}`}
-            class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
-          >
-            {piEmail}
-          </a>
-        </p>
+        <ul class="mt-3 space-y-1.5 text-sm">
+          <li>
+            <a
+              href={`mailto:${piEmail}`}
+              class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+            >
+              {piEmail}
+            </a>
+          </li>
+          <li>
+            <a
+              href={href('/contact')}
+              class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+            >
+              Contact us
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -105,15 +114,27 @@ const year = new Date().getFullYear();
       class="mt-12 flex flex-col gap-3 border-t border-[var(--color-line)] pt-6 text-xs text-[var(--color-ink-subtle)] sm:flex-row sm:items-center sm:justify-between"
     >
       <p>© {year} {site.longName}, {site.university.name}.</p>
-      <p>
-        This website is open source and available on{' '}
-        <a
-          href={site.repo}
-          rel="noopener"
-          class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
-          >GitHub</a
-        >.
-      </p>
+      <ul class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        <li>
+          <a
+            href={site.org}
+            rel="noopener"
+            class="inline-flex items-center gap-1.5 text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+          >
+            <Icon name="lucide:github" class="size-3.5" aria-hidden="true" />
+            CUHK-Geophysics on GitHub
+          </a>
+        </li>
+        <li>
+          <a
+            href={site.repo}
+            rel="noopener"
+            class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+          >
+            Website source
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </footer>

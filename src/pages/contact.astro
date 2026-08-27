@@ -6,7 +6,7 @@ import mapToCuhk from '@/assets/brand/map-to-cuhk.jpg';
 import ExternalLink from '@/components/ExternalLink.astro';
 import Section from '@/components/Section.astro';
 import PageLayout from '@/layouts/PageLayout.astro';
-import { contact, piEmail, site } from '@/lib/site';
+import { addressLines, addressOneLine, contact, piEmail, site } from '@/lib/site';
 
 const directions = [
   {
@@ -41,6 +41,9 @@ const onCampus = [
   'Room 309 (Lab 4) is the Geophysics Laboratory.',
 ];
 
+const labAddress = addressLines(contact.lab.room);
+const piAddress = addressLines(contact.pi.office);
+
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'ContactPage',
@@ -50,7 +53,7 @@ const structuredData = {
     email: piEmail,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: `${contact.lab.room}, ${contact.lab.building}`,
+      streetAddress: addressOneLine(contact.lab.room),
       addressLocality: contact.lab.district,
       addressRegion: 'Hong Kong SAR',
       addressCountry: 'HK',
@@ -69,7 +72,7 @@ const structuredData = {
 >
   <!-- ========================= Addresses ========================= -->
   <Section>
-    <div class="grid gap-6 md:grid-cols-2">
+    <div class="grid items-start gap-6 md:grid-cols-2">
       <article
         class="rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-2)] p-6 md:p-8"
       >
@@ -85,10 +88,14 @@ const structuredData = {
           <ExternalLink href={site.department.url} showIcon={false}>
             {site.department.name}
           </ExternalLink><br />
-          {contact.lab.room}<br />
-          {contact.lab.building}<br />
-          {contact.lab.campus}<br />
-          {contact.lab.district}, {contact.lab.region}
+          {
+            labAddress.map((line, i) => (
+              <Fragment>
+                {i > 0 && <br />}
+                {line}
+              </Fragment>
+            ))
+          }
         </address>
       </article>
 
@@ -111,9 +118,14 @@ const structuredData = {
         </p>
         <p class="text-[var(--color-ink-muted)]">{contact.pi.title}</p>
         <address class="mt-3 leading-relaxed text-[var(--color-ink-muted)] not-italic">
-          {contact.pi.office}<br />
-          {contact.lab.building}, {contact.lab.campus}<br />
-          {contact.lab.district}, {contact.lab.region}
+          {
+            piAddress.map((line, i) => (
+              <Fragment>
+                {i > 0 && <br />}
+                {line}
+              </Fragment>
+            ))
+          }
         </address>
         <p class="mt-4">
           <a
@@ -124,6 +136,14 @@ const structuredData = {
             {piEmail}
           </a>
         </p>
+        <ul class="mt-4 space-y-1.5 text-sm">
+          <li>
+            <ExternalLink href={contact.pi.profile}>CUHK departmental profile</ExternalLink>
+          </li>
+          <li>
+            <ExternalLink href={contact.pi.website}>Personal site</ExternalLink>
+          </li>
+        </ul>
       </article>
     </div>
   </Section>
@@ -174,11 +194,14 @@ const structuredData = {
           </ol>
         </div>
 
-        <p class="mt-8 text-sm">
-          <ExternalLink href="https://www.cuhk.edu.hk/campus-shuttle">
-            CUHK campus shuttle timetable
-          </ExternalLink>
-        </p>
+        <ul class="mt-8 space-y-2 text-sm">
+          <li>
+            <ExternalLink href={contact.campusMap}>Official CUHK campus map</ExternalLink>
+          </li>
+          <li>
+            <ExternalLink href={contact.shuttle}>CUHK campus shuttle timetable</ExternalLink>
+          </li>
+        </ul>
       </div>
 
       <figure>
@@ -193,6 +216,16 @@ const structuredData = {
         <figcaption class="mt-3 text-sm text-[var(--color-ink-subtle)]">
           The Mong Man Wai Building on the main CUHK campus.
         </figcaption>
+        <a
+          href={contact.campusMap}
+          rel="noopener noreferrer"
+          target="_blank"
+          class="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-[var(--color-line-strong)] px-4 text-sm font-bold text-[var(--color-ink)] transition-colors duration-[var(--duration-micro)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+        >
+          <Icon name="lucide:map" class="size-4" aria-hidden="true" />
+          Open the interactive campus map
+          <span class="sr-only"> on cuhk.edu.hk (opens in a new tab)</span>
+        </a>
       </figure>
     </div>
   </Section>
