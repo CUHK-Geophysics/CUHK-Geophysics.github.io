@@ -1,0 +1,73 @@
+---
+/**
+ * Click-to-load YouTube embed.
+ *
+ * The iframe is only created on activation, so the page does not pay for
+ * third-party JS, cookies or ~500 kB of transfer on first paint. The poster is
+ * fetched from YouTube's still-image endpoint at a fixed aspect ratio, so
+ * activating the player causes no layout shift.
+ */
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  id: string;
+  title: string;
+  start?: number;
+}
+
+const { id, title, start = 0 } = Astro.props;
+const src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&start=${start}&rel=0`;
+---
+
+<figure class="not-prose">
+  <div
+    class="relative aspect-video w-full overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-3)]"
+    data-video-facade
+    data-src={src}
+    data-title={title}
+  >
+    <button
+      type="button"
+      class="group absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-4 bg-[var(--color-surface-3)] transition-colors duration-[var(--duration-base)] hover:bg-[var(--color-surface-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]"
+      data-video-play
+    >
+      <span
+        class="inline-flex size-16 items-center justify-center rounded-full bg-[var(--color-brand)] text-[var(--color-on-brand)] transition-transform duration-[var(--duration-base)] group-hover:scale-105"
+      >
+        <Icon name="lucide:play" class="size-7 translate-x-0.5" aria-hidden="true" />
+      </span>
+      <span class="max-w-sm px-6 text-center text-sm font-bold text-[var(--color-ink)]">
+        Play: {title}
+      </span>
+      <span class="text-xs text-[var(--color-ink-subtle)]">Loads video from YouTube</span>
+    </button>
+  </div>
+  <figcaption class="mt-3 text-sm text-[var(--color-ink-subtle)]">
+    {title} —
+    <a
+      href={`https://www.youtube.com/watch?v=${id}`}
+      rel="noopener noreferrer"
+      target="_blank"
+      class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+    >
+      watch on YouTube<span class="sr-only"> (opens in a new tab)</span>
+    </a>
+  </figcaption>
+</figure>
+
+<script>
+  for (const facade of document.querySelectorAll<HTMLElement>('[data-video-facade]')) {
+    facade.querySelector('[data-video-play]')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = facade.dataset['src'] ?? '';
+      iframe.title = facade.dataset['title'] ?? 'Video';
+      iframe.allow =
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.className = 'absolute inset-0 h-full w-full border-0';
+      facade.replaceChildren(iframe);
+      iframe.focus();
+    });
+  }
+</script>

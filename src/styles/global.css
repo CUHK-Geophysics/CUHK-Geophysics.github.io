@@ -1,0 +1,314 @@
+@import 'tailwindcss';
+
+/* Self-hosted type — no third-party font requests, no render-blocking link.
+   Crimson Pro (serif) for display/headings, Atkinson Hyperlegible (sans) for
+   body and UI: the pairing the design system recommends for research sites,
+   and Atkinson is purpose-built for legibility. */
+@import '@fontsource-variable/crimson-pro/wght.css';
+@import '@fontsource-variable/crimson-pro/wght-italic.css';
+@import '@fontsource/atkinson-hyperlegible/400.css';
+@import '@fontsource/atkinson-hyperlegible/700.css';
+@import '@fontsource/atkinson-hyperlegible/400-italic.css';
+
+/* Dark mode is class-driven so an explicit user choice can override the OS.
+   The `:where()` wrapper keeps specificity at zero. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ==========================================================================
+   Design tokens
+   Palette is the site's existing brand identity, sampled from the lab logo:
+     #750F6D  brand purple (the original navbar / theme-color)
+     #531D68  logo emblem purple
+     gold ring, darkened/lightened per theme for 4.5:1 text contrast
+     #1B1D24  logo charcoal
+   Every pairing below is verified by `npm run contrast`.
+   ========================================================================== */
+@theme {
+  --font-sans:
+    'Atkinson Hyperlegible', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Crimson Pro Variable', 'Crimson Pro', Georgia, 'Times New Roman', serif;
+
+  /* Fluid type scale — 1.200 minor third at 375px widening to 1.250 at 1440px. */
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.78125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --text-xl: clamp(1.1875rem, 1.09rem + 0.4vw, 1.375rem);
+  --text-2xl: clamp(1.375rem, 1.22rem + 0.65vw, 1.75rem);
+  --text-3xl: clamp(1.625rem, 1.36rem + 1.1vw, 2.25rem);
+  --text-4xl: clamp(1.9375rem, 1.5rem + 1.8vw, 3rem);
+  --text-5xl: clamp(2.25rem, 1.6rem + 2.7vw, 3.75rem);
+
+  /* 8px rhythm, plus the two half-steps the scale genuinely needs. */
+  --spacing: 0.25rem;
+
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Motion tiers: micro (state change), base (local move), slow (page-level). */
+  --duration-micro: 120ms;
+  --duration-base: 220ms;
+  --duration-slow: 340ms;
+
+  /* --- semantic colours: light theme is the base definition --- */
+  --color-surface: #ffffff;
+  --color-surface-2: #f6f5f7;
+  --color-surface-3: #edebef;
+  --color-ink: #1b1d24;
+  --color-ink-muted: #55596b;
+  --color-ink-subtle: #6b6f80;
+  --color-line: #d8d4dc;
+  --color-line-strong: #847e8c;
+  --color-brand: #750f6d;
+  --color-brand-strong: #5e0c57;
+  --color-brand-wash: #f8effa;
+  --color-on-brand: #ffffff;
+  --color-accent: #7a5514;
+  --color-accent-wash: #faf4e6;
+  --color-on-accent: #ffffff;
+  --color-ring: #750f6d;
+
+  /* Non-theming brand constants (logo emblem, used for decorative fills). */
+  --color-emblem: #531d68;
+}
+
+/* The OS preference applies unless the user has explicitly chosen light. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-surface: #121218;
+    --color-surface-2: #1a1a22;
+    --color-surface-3: #23232d;
+    --color-ink: #edecf0;
+    --color-ink-muted: #afacba;
+    --color-ink-subtle: #9a97a6;
+    --color-line: #33323e;
+    --color-line-strong: #787587;
+    --color-brand: #dfa3d8;
+    --color-brand-strong: #eec5e9;
+    --color-brand-wash: #241026;
+    --color-on-brand: #2a0526;
+    --color-accent: #dfbe6e;
+    --color-accent-wash: #241d0d;
+    --color-on-accent: #241802;
+    --color-ring: #dfa3d8;
+  }
+}
+
+/* An explicit dark choice wins in both directions. */
+:root.dark {
+  --color-surface: #121218;
+  --color-surface-2: #1a1a22;
+  --color-surface-3: #23232d;
+  --color-ink: #edecf0;
+  --color-ink-muted: #afacba;
+  --color-ink-subtle: #9a97a6;
+  --color-line: #33323e;
+  --color-line-strong: #787587;
+  --color-brand: #dfa3d8;
+  --color-brand-strong: #eec5e9;
+  --color-brand-wash: #241026;
+  --color-on-brand: #2a0526;
+  --color-accent: #dfbe6e;
+  --color-accent-wash: #241d0d;
+  --color-on-accent: #241802;
+  --color-ring: #dfa3d8;
+}
+
+/* ==========================================================================
+   Base layer
+   ========================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Sticky header height + breathing room, so anchor targets are not hidden. */
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.011em;
+    text-wrap: balance;
+    color: var(--color-ink);
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /* One visible focus treatment for the whole site. Never removed. */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* Only suppress the ring for pointer clicks, never for keyboard users. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: var(--color-brand);
+    color: var(--color-on-brand);
+  }
+
+  hr {
+    border-color: var(--color-line);
+  }
+
+  img,
+  picture,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Tables (publication metadata, course lists) must never widen the page. */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+}
+
+/* ==========================================================================
+   Component utilities
+   ========================================================================== */
+@utility container-page {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 76rem;
+  padding-inline: 1.25rem;
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+  @media (width >= 80rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility prose-page {
+  max-width: 68ch;
+  font-size: var(--text-lg);
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+
+  & h2 {
+    font-size: var(--text-2xl);
+    margin-block: 2.5rem 0.75rem;
+    color: var(--color-ink);
+  }
+  & h3 {
+    font-size: var(--text-xl);
+    margin-block: 2rem 0.5rem;
+    color: var(--color-ink);
+  }
+  & h4 {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 700;
+    margin-block: 1.5rem 0.25rem;
+    color: var(--color-ink);
+  }
+  & p {
+    margin-block: 1rem;
+  }
+  & ul,
+  & ol {
+    margin-block: 1rem;
+    padding-inline-start: 1.5rem;
+  }
+  & ul {
+    list-style: disc;
+  }
+  & ol {
+    list-style: decimal;
+  }
+  & li {
+    margin-block: 0.375rem;
+  }
+  & li::marker {
+    color: var(--color-brand);
+  }
+  & strong {
+    color: var(--color-ink);
+    font-weight: 700;
+  }
+  & a {
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+  & a:hover {
+    color: var(--color-brand-strong);
+    text-decoration-thickness: 2px;
+  }
+  & blockquote {
+    border-inline-start: 3px solid var(--color-brand);
+    padding-inline-start: 1.25rem;
+    font-style: italic;
+    margin-block: 1.5rem;
+  }
+  & :first-child {
+    margin-block-start: 0;
+  }
+}
+
+/* Horizontally-scrollable wrapper for anything intrinsically wide.
+   The page body itself must never scroll sideways. */
+@utility scroll-x {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ==========================================================================
+   Motion preferences — honoured globally, not per component.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+}

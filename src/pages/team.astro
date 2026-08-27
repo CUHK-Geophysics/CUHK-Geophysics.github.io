@@ -1,0 +1,199 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+
+import ExternalLink from '@/components/ExternalLink.astro';
+import Section from '@/components/Section.astro';
+import { alumni, members, principalInvestigator, trackLabels, tracksInOrder } from '@/data/team';
+import PageLayout from '@/layouts/PageLayout.astro';
+import { piEmail, site } from '@/lib/site';
+import { href } from '@/lib/url';
+
+const grouped = tracksInOrder
+  .map((track) => ({ track, people: members.filter((m) => m.track === track) }))
+  .filter((g) => g.people.length > 0);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `Team — ${site.longName}`,
+  about: [
+    {
+      '@type': 'Person',
+      name: principalInvestigator.name,
+      jobTitle: principalInvestigator.role,
+      email: piEmail,
+      url: principalInvestigator.links[0].href,
+      worksFor: { '@type': 'CollegeOrUniversity', name: site.university.name },
+    },
+    ...members.map((m) => ({
+      '@type': 'Person',
+      name: m.name,
+      jobTitle: m.role,
+      worksFor: { '@type': 'CollegeOrUniversity', name: site.university.name },
+    })),
+  ],
+};
+---
+
+<PageLayout
+  title="Team"
+  heading="The group"
+  eyebrow="People"
+  lead="We welcome people of any race, ethnicity, religion, national origin, gender identity, gender expression, caregiver and family commitments, political affiliation, sexual orientation, age or disability status."
+  description="Members of the CUHK Geophysics Laboratory: principal investigator, research faculty, postdoctoral researchers, graduate students and alumni."
+  structuredData={structuredData}
+>
+  <!-- ===================== Principal investigator ===================== -->
+  <Section eyebrow="Principal investigator">
+    <article
+      class="grid gap-8 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-2)] p-6 sm:grid-cols-[13rem_minmax(0,1fr)] sm:p-8 md:gap-10 lg:grid-cols-[16rem_minmax(0,1fr)]"
+    >
+      <Image
+        src={principalInvestigator.photo}
+        alt={`Portrait of ${principalInvestigator.name}`}
+        widths={[256, 384, 512]}
+        sizes="(min-width: 1024px) 256px, (min-width: 640px) 208px, 60vw"
+        loading="eager"
+        class="aspect-square w-full max-w-[13rem] rounded-md object-cover sm:max-w-none"
+      />
+
+      <div>
+        <h2 class="text-2xl">
+          {principalInvestigator.name}, {principalInvestigator.qualification}
+          <span lang="zh-Hant" class="ml-1.5 font-normal text-[var(--color-ink-muted)]">
+            ({principalInvestigator.nameChinese})
+          </span>
+        </h2>
+        <p class="mt-1 font-bold text-[var(--color-brand)]">{principalInvestigator.role}</p>
+        <p class="mt-4 max-w-xl leading-relaxed text-[var(--color-ink-muted)]">
+          {principalInvestigator.interest}
+        </p>
+
+        <dl class="mt-6 space-y-2 text-sm">
+          <div class="flex flex-wrap gap-x-2">
+            <dt class="font-bold text-[var(--color-ink)]">Office</dt>
+            <dd class="text-[var(--color-ink-muted)]">{principalInvestigator.office}</dd>
+          </div>
+          <div class="flex flex-wrap gap-x-2">
+            <dt class="font-bold text-[var(--color-ink)]">Email</dt>
+            <dd>
+              <a
+                href={`mailto:${piEmail}`}
+                class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+                >{piEmail}</a
+              >
+            </dd>
+          </div>
+        </dl>
+
+        <ul class="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+          {
+            principalInvestigator.links.map((link) => (
+              <li>
+                <ExternalLink href={link.href}>{link.label}</ExternalLink>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </article>
+  </Section>
+
+  <!-- ========================= Group members ========================= -->
+  <Section tone="muted" title="Group members" id="members">
+    <!-- One continuous grid across all tracks: a track with a single member
+         then sits in the same column rhythm as the rest, instead of getting a
+         near-empty full-width band of its own. -->
+    <div class="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {
+        grouped.map(({ track, people }) => (
+          <Fragment>
+            <h3
+              id={track}
+              class="text-2xs col-span-full scroll-mt-24 border-b border-[var(--color-line)] pb-2 font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase"
+            >
+              {trackLabels[track]}
+              <span class="ml-2 font-normal text-[var(--color-ink-subtle)] tabular-nums">
+                ({people.length})
+              </span>
+            </h3>
+            {people.map((member) => (
+              <article
+                class="flex h-full flex-col overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)]"
+                id={member.slug}
+              >
+                <Image
+                  src={member.photo}
+                  alt={`Portrait of ${member.name}`}
+                  widths={[240, 360, 480]}
+                  sizes="(min-width: 1280px) 260px, (min-width: 1024px) 300px, (min-width: 640px) 44vw, 88vw"
+                  loading="lazy"
+                  class="aspect-square w-full object-cover"
+                />
+                <div class="flex flex-1 flex-col p-5">
+                  <h4 class="font-serif text-lg leading-snug font-semibold text-balance">
+                    {member.name}
+                  </h4>
+                  <p class="mt-1 text-sm font-bold text-[var(--color-brand)]">{member.role}</p>
+                  <p class="mt-3 flex-1 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+                    {member.interest}
+                  </p>
+                  <p class="mt-4 flex items-center gap-1.5 text-xs text-[var(--color-ink-subtle)]">
+                    <Icon name="lucide:calendar" class="size-3.5 shrink-0" aria-hidden="true" />
+                    In the group since {member.since}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </Fragment>
+        ))
+      }
+    </div>
+  </Section>
+
+  <!-- ============================= Alumni ============================= -->
+  <Section id="alumni" title="Alumni" lead="Former members of the group, and where they went next.">
+    <ol class="divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
+      {
+        alumni.map((person) => (
+          <li class="grid gap-1 py-5 sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] sm:gap-6">
+            <p class="font-serif text-lg font-semibold">{person.name}</p>
+            <div class="text-sm text-[var(--color-ink-muted)]">
+              <p>{person.tenure}</p>
+              {person.next && (
+                <p class="mt-1 text-[var(--color-ink)]">
+                  <span class="text-[var(--color-ink-subtle)]">Now:</span> {person.next}
+                </p>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <!-- ============================= Join CTA ============================= -->
+  <Section>
+    <div
+      class="rounded-lg border border-[var(--color-line)] bg-[var(--color-brand-wash)] p-8 md:p-10"
+    >
+      <h2 class="text-2xl">Interested in joining us?</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-[var(--color-ink-muted)]">
+        We typically welcome one to two new group members each year, and we welcome applicants from
+        {' '}
+        <strong class="text-[var(--color-ink)]">all</strong> backgrounds. If your interests look like
+        a good fit, please get in touch.
+      </p>
+      <p class="mt-6">
+        <a
+          href={href('/join')}
+          class="inline-flex min-h-11 items-center gap-2 rounded-md bg-[var(--color-brand)] px-5 text-[0.9375rem] font-bold text-[var(--color-on-brand)] transition-colors duration-[var(--duration-micro)] hover:bg-[var(--color-brand-strong)]"
+        >
+          Opportunities and how to apply
+          <Icon name="lucide:arrow-right" class="size-4" aria-hidden="true" />
+        </a>
+      </p>
+    </div>
+  </Section>
+</PageLayout>

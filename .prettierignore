@@ -1,0 +1,7 @@
+dist/
+.astro/
+node_modules/
+.claude/
+.claude-plugin/
+design-system/
+package-lock.json

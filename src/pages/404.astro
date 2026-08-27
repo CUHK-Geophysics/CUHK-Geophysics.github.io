@@ -1,0 +1,128 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+
+import logo from '@/assets/brand/logo.png';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { nav, piEmail, site } from '@/lib/site';
+import { href } from '@/lib/url';
+
+/**
+ * The previous site's 404 page joked that the visitor had "broken the lab
+ * website". This one does the useful thing instead: says plainly what happened,
+ * notes that the site was rebuilt (which is why an old bookmark may now miss),
+ * and puts every destination one click away.
+ */
+
+const descriptions: Record<string, string> = {
+  '/': 'Overview of the group, recent work and how to reach us.',
+  '/research': 'Our five research themes, from machine learning to hazard cascades.',
+  '/publications': 'The complete numbered publication list, filterable by topic.',
+  '/team': 'The principal investigator, group members and alumni.',
+  '/teaching': 'Courses taught in the department, with syllabi.',
+  '/gallery': 'Photographs from fieldwork and research cruises.',
+  '/join': 'Funding routes, deadlines and how to apply.',
+  '/contact': 'Address, directions and contact details.',
+};
+
+const destinations = nav.filter((item) => item.href !== '/');
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you requested could not be found. Every section of the CUHK Geophysics Laboratory site is listed here."
+>
+  <!-- Statement -->
+  <section class="border-b border-[var(--color-line)] bg-[var(--color-surface-2)]">
+    <div class="container-page py-16 md:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16">
+        <div class="max-w-2xl">
+          <p
+            class="font-serif text-6xl leading-none font-semibold text-[var(--color-brand)] tabular-nums md:text-7xl"
+            aria-hidden="true"
+          >
+            404
+          </p>
+          <h1 class="mt-5 text-4xl">This page could not be found</h1>
+          <p class="mt-5 text-lg leading-relaxed text-[var(--color-ink-muted)]">
+            The address may be mistyped, or the page may have moved when this site was rebuilt — in
+            which case an older bookmark or search result will no longer resolve. Everything the
+            site contains is listed below.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a
+              href={href('/')}
+              class="inline-flex min-h-11 items-center gap-2 rounded-md bg-[var(--color-brand)] px-5 text-[0.9375rem] font-bold text-[var(--color-on-brand)] transition-colors duration-[var(--duration-micro)] hover:bg-[var(--color-brand-strong)]"
+            >
+              <Icon name="lucide:arrow-left" class="size-4" aria-hidden="true" />
+              Back to the homepage
+            </a>
+            <a
+              href={href('/contact')}
+              class="inline-flex min-h-11 items-center gap-2 rounded-md border border-[var(--color-line-strong)] bg-[var(--color-surface)] px-5 text-[0.9375rem] font-bold text-[var(--color-ink)] transition-colors duration-[var(--duration-micro)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+            >
+              Contact us
+            </a>
+          </div>
+        </div>
+
+        <Image
+          src={logo}
+          alt=""
+          width={200}
+          height={200}
+          densities={[1, 2]}
+          loading="eager"
+          class="mx-auto w-32 opacity-90 lg:w-48"
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Every destination on the site -->
+  <section class="container-page py-14 md:py-20">
+    <h2 class="text-2xl">Where you might be heading</h2>
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        destinations.map((item) => (
+          <li>
+            <a
+              href={href(item.href)}
+              class="group flex h-full flex-col rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] p-5 transition-colors duration-[var(--duration-base)] hover:border-[var(--color-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]"
+            >
+              <span class="flex items-center justify-between gap-3">
+                <span class="font-serif text-lg font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-brand)]">
+                  {item.label}
+                </span>
+                <Icon
+                  name="lucide:arrow-right"
+                  class="size-4 shrink-0 text-[var(--color-ink-subtle)] transition-transform duration-[var(--duration-base)] group-hover:translate-x-0.5 group-hover:text-[var(--color-brand)]"
+                  aria-hidden="true"
+                />
+              </span>
+              <span class="mt-2 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+                {descriptions[item.href]}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-10 text-sm text-[var(--color-ink-muted)]">
+      Still cannot find what you were looking for? Email{' '}
+      <a
+        href={`mailto:${piEmail}`}
+        class="font-bold text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+        >{piEmail}</a
+      >, or browse the group's code and data on{' '}
+      <a
+        href={site.org}
+        rel="noopener"
+        class="font-bold text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+        >GitHub</a
+      >.
+    </p>
+  </section>
+</BaseLayout>

@@ -1,0 +1,108 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import ExternalLink from '@/components/ExternalLink.astro';
+import { courses, teachingSource } from '@/data/courses';
+import PageLayout from '@/layouts/PageLayout.astro';
+import { site } from '@/lib/site';
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `Courses taught — ${site.longName}`,
+  itemListElement: courses.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Course',
+      courseCode: c.code,
+      name: c.title,
+      provider: { '@type': 'CollegeOrUniversity', name: site.university.name },
+    },
+  })),
+};
+---
+
+<PageLayout
+  title="Teaching"
+  heading="Teaching"
+  eyebrow="Teaching"
+  lead="Courses taught in the Department of Earth and Environmental Sciences, from introductory computation to volcanology and field geoscience."
+  description="Courses taught by the CUHK Geophysics Laboratory: oceanography, hydrogeology, volcanoes, field geoscience, computational Earth system science and statistical methods."
+  structuredData={structuredData}
+>
+  <div class="container-page py-12 md:py-16">
+    <ol class="space-y-4">
+      {
+        courses.map((course) => (
+          <li>
+            <article class="rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] p-6 transition-colors duration-[var(--duration-base)] hover:border-[var(--color-line-strong)] md:p-8">
+              <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-8">
+                <div class="min-w-0">
+                  <p class="text-2xs font-sans font-bold tracking-[0.16em] text-[var(--color-brand)] uppercase">
+                    {course.code}
+                  </p>
+                  <h2 class="mt-2 text-2xl text-balance">{course.title}</h2>
+                  <p class="mt-2 text-sm text-[var(--color-ink-subtle)]">{course.level}</p>
+                  {course.note && (
+                    <p class="mt-3 text-sm text-[var(--color-ink-muted)]">{course.note}</p>
+                  )}
+                </div>
+
+                {course.syllabus && (
+                  <a
+                    href={course.syllabus}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    class="inline-flex min-h-11 shrink-0 items-center gap-2 self-start rounded-md border border-[var(--color-line-strong)] px-4 text-sm font-bold text-[var(--color-ink)] transition-colors duration-[var(--duration-micro)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+                  >
+                    <Icon name="lucide:file-text" class="size-4" aria-hidden="true" />
+                    Syllabus
+                    <span class="sr-only">
+                      {' '}
+                      for {course.code} {course.title} (PDF, opens in a new tab)
+                    </span>
+                  </a>
+                )}
+              </div>
+
+              <div class="mt-6 border-t border-[var(--color-line)] pt-4">
+                <h3 class="text-2xs font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase">
+                  Teaching evaluations
+                </h3>
+                <ul class="mt-3 flex flex-wrap gap-2">
+                  {course.evaluations.map((evaluation) => (
+                    <li>
+                      <a
+                        href={evaluation.href}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        class="inline-flex min-h-9 items-center rounded-sm border border-[var(--color-line)] px-2.5 text-sm text-[var(--color-ink-muted)] tabular-nums transition-colors duration-[var(--duration-micro)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+                      >
+                        {evaluation.year}
+                        {evaluation.label && (
+                          <span class="text-2xs ml-1.5 text-[var(--color-ink-subtle)]">
+                            {evaluation.label}
+                          </span>
+                        )}
+                        <span class="sr-only">
+                          {' '}
+                          teaching evaluation for {course.code} (PDF, opens in a new tab)
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+
+    <p class="mt-10 text-sm text-[var(--color-ink-subtle)]">
+      Syllabus and evaluation documents are published on the PI's personal site —
+      <ExternalLink href={teachingSource}>tanyenjoe.com/teaching</ExternalLink>.
+    </p>
+  </div>
+</PageLayout>

@@ -1,0 +1,29 @@
+---
+/**
+ * Applies the stored or system colour scheme before first paint.
+ *
+ * `is:inline` keeps this out of the bundle graph so it runs synchronously in
+ * <head> — anything deferred would let a light frame flash on a dark device.
+ */
+---
+
+<script is:inline>
+  (() => {
+    const KEY = 'cuhk-geophysics-theme';
+    let stored = null;
+    try {
+      stored = localStorage.getItem(KEY);
+    } catch {
+      /* Storage can be blocked; fall back to the OS preference. */
+    }
+    const root = document.documentElement;
+    root.classList.remove('light', 'dark');
+    if (stored === 'light' || stored === 'dark') root.classList.add(stored);
+
+    const dark =
+      stored === 'dark' ||
+      (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', dark ? '#121218' : '#750f6d');
+  })();
+</script>

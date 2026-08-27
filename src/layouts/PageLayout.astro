@@ -1,0 +1,48 @@
+---
+/**
+ * Standard interior page: a compact brand-tinted page header followed by the
+ * page's own sections. The homepage does not use this — it has its own hero.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+interface Props {
+  title: string;
+  /** Displayed heading; falls back to `title` when omitted. */
+  heading?: string;
+  /** One or two sentences of orientation beneath the heading. */
+  lead?: string;
+  description?: string;
+  structuredData?: Record<string, unknown>;
+  /** Eyebrow label above the heading. */
+  eyebrow?: string;
+}
+
+const { title, heading, lead, description, structuredData, eyebrow } = Astro.props;
+
+/* `exactOptionalPropertyTypes` forbids passing an explicit `undefined`, so
+   omit the optional keys entirely when the page did not supply them. */
+const baseProps = {
+  title,
+  ...(description === undefined ? {} : { description }),
+  ...(structuredData === undefined ? {} : { structuredData }),
+};
+---
+
+<BaseLayout {...baseProps}>
+  <div class="border-b border-[var(--color-line)] bg-[var(--color-surface-2)]">
+    <div class="container-page py-12 md:py-16">
+      {
+        eyebrow && (
+          <p class="text-2xs mb-3 font-sans font-bold tracking-[0.16em] text-[var(--color-brand)] uppercase">
+            {eyebrow}
+          </p>
+        )
+      }
+      <h1 class="max-w-3xl text-4xl">{heading ?? title}</h1>
+      {lead && <p class="mt-4 max-w-2xl text-lg text-[var(--color-ink-muted)]">{lead}</p>}
+      <slot name="header-extra" />
+    </div>
+  </div>
+
+  <slot />
+</BaseLayout>
