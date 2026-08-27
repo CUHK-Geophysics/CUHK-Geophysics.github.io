@@ -1,0 +1,151 @@
+---
+/**
+ * A decorative seismogram: quiet noise, one sharp burst, then coda decaying
+ * back to quiet.
+ *
+ * The waveform is generated here at build time from a deterministic function —
+ * no Math.random(), so the emitted markup is byte-identical between builds and
+ * does not churn the git diff or bust caches for nothing.
+ *
+ * Purely decorative, so the <svg> is aria-hidden and the surrounding page
+ * carries all the meaning.
+ */
+
+interface Props {
+  /** Sample count. Higher is smoother and a longer path string. */
+  samples?: number;
+  class?: string;
+}
+
+const { samples = 620, class: className = '' } = Astro.props as Props;
+
+const WIDTH = 1200;
+const HEIGHT = 180;
+const MID = HEIGHT / 2;
+
+/** Deterministic value-noise in [-1, 1]: layered irrationals, no PRNG state. */
+function noise(i: number): number {
+  return (
+    0.6 * Math.sin(i * 0.7351) +
+    0.25 * Math.sin(i * 1.9137 + 1.1) +
+    0.15 * Math.sin(i * 4.1731 + 2.7)
+  );
+}
+
+/** Where the event arrives, as a fraction of the record. */
+const ONSET = 0.42;
+
+/**
+ * Envelope of a small earthquake: flat background, near-instant onset, then an
+ * exponential decay through the coda.
+ */
+function envelope(t: number): number {
+  const background = 0.075;
+  if (t < ONSET) return background;
+  const since = t - ONSET;
+  const decay = Math.exp(-since * 5.5);
+  return background + decay * 0.94;
+}
+
+const points: string[] = [];
+for (let s = 0; s < samples; s++) {
+  const t = s / (samples - 1);
+  const x = t * WIDTH;
+  const y = MID - noise(s) * envelope(t) * (HEIGHT / 2 - 6);
+  points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+}
+const path = `M${points.join('L')}`;
+
+/** Path length, summed from the same points, for the draw-on animation. */
+let length = 0;
+for (let s = 1; s < points.length; s++) {
+  const [x1, y1] = points[s - 1]!.split(',').map(Number) as [number, number];
+  const [x2, y2] = points[s]!.split(',').map(Number) as [number, number];
+  length += Math.hypot(x2 - x1, y2 - y1);
+}
+const dash = Math.ceil(length);
+---
+
+<div class="relative">
+  <svg
+    viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+    class:list={['seismogram block w-full', className]}
+    fill="none"
+    aria-hidden="true"
+    role="presentation"
+    preserveAspectRatio="none"
+    style={`--dash:${dash}`}
+  >
+    <!-- Baseline and time ticks -->
+    <line
+      x1="0"
+      y1={MID}
+      x2={WIDTH}
+      y2={MID}
+      stroke="var(--color-line)"
+      stroke-width="1"
+      vector-effect="non-scaling-stroke"></line>
+    <!-- Onset marker, as a picker would place it -->
+    <line
+      x1={ONSET * WIDTH}
+      y1="10"
+      x2={ONSET * WIDTH}
+      y2={HEIGHT - 10}
+      stroke="var(--color-accent)"
+      stroke-width="1"
+      stroke-dasharray="4 4"
+      vector-effect="non-scaling-stroke"
+      class="seismogram-marker"></line>
+
+    <path
+      d={path}
+      stroke="var(--color-brand)"
+      stroke-width="1.5"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+      vector-effect="non-scaling-stroke"
+      class="seismogram-trace"></path>
+  </svg>
+</div>
+
+<style>
+  /*
+   * The finished state is the default, so a visitor who prefers reduced motion
+   * — or whose CSS animations never run — sees the complete trace. The draw-on
+   * is layered on top only when motion is welcome. Written the other way round,
+   * reduced-motion users would be left staring at an invisible trace.
+   */
+  .seismogram-trace {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+
+  .seismogram-marker {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .seismogram-trace {
+      stroke-dasharray: var(--dash);
+      stroke-dashoffset: var(--dash);
+      animation: seismogram-draw 2.4s cubic-bezier(0.32, 0.72, 0.35, 1) forwards;
+    }
+
+    .seismogram-marker {
+      opacity: 0;
+      animation: seismogram-marker 0.4s ease-out 1.1s forwards;
+    }
+  }
+
+  @keyframes seismogram-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes seismogram-marker {
+    to {
+      opacity: 1;
+    }
+  }
+</style>

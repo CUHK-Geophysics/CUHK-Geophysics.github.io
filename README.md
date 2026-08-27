@@ -29,12 +29,29 @@ Node 22 is expected (see `.nvmrc`).
 
 ## Editing content
 
-All page content lives in typed data modules under `src/data/`, so a malformed
-entry fails the build instead of the page.
+### Members and news are Markdown, on purpose
+
+The people in the group and the news items are **Markdown files**, one per entry,
+so members can maintain their own details without touching TypeScript:
+
+| What        | Where                               | Guide                                          |
+| ----------- | ----------------------------------- | ---------------------------------------------- |
+| A person    | `src/content/members/<name>.md`     | [docs/ADD-A-MEMBER.md](./docs/ADD-A-MEMBER.md) |
+| A news item | `src/content/news/<date>-<slug>.md` | [docs/ADD-NEWS.md](./docs/ADD-NEWS.md)         |
+
+Each folder holds a `_template.md` to copy. The schemas in
+`src/content.config.ts` validate every file at build time, so a mistyped field
+fails the build with a message naming the file rather than publishing a broken
+page.
+
+### Everything else
+
+The remaining content lives in typed data modules under `src/data/`, so a
+malformed entry fails the build instead of the page.
 
 | File                        | Contents                                               |
 | --------------------------- | ------------------------------------------------------ |
-| `src/data/team.ts`          | Principal investigator, current members, alumni        |
+| `src/data/team.ts`          | Alumni only — former members do not edit the site      |
 | `src/data/publications.ts`  | Numbered publication list, author role markers, topics |
 | `src/data/courses.ts`       | Courses, syllabus links, teaching-evaluation years     |
 | `src/data/research.ts`      | Research themes and the intro copy                     |
@@ -44,10 +61,10 @@ entry fails the build instead of the page.
 
 ### Adding a group member
 
-1. Drop a portrait in `src/assets/people/`. A square crop is ideal — the card
-   uses `aspect-square` with `object-cover`.
-2. Add an entry to `members` in `src/data/team.ts`, importing the image at the
-   top of the file. `track` decides which heading it appears under.
+Copy `src/content/members/_template.md`, rename it, drop a square portrait in the
+same folder, and fill in the fields. Full instructions — including every social
+account a member can list — are in
+[docs/ADD-A-MEMBER.md](./docs/ADD-A-MEMBER.md).
 
 ### Adding a publication
 

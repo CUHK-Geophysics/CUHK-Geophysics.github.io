@@ -1,21 +1,30 @@
 ---
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 
 import logo from '@/assets/brand/logo.png';
 import Button from '@/components/Button.astro';
 import Carousel from '@/components/Carousel.astro';
+import NewsItem from '@/components/NewsItem.astro';
 import ExternalLink from '@/components/ExternalLink.astro';
 import Section from '@/components/Section.astro';
 import { featuredPhotos } from '@/data/gallery';
 import { published } from '@/data/publications';
 import { themes } from '@/data/research';
-import { members } from '@/data/team';
+
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { addressLines, addressOneLine, contact, piEmail, site } from '@/lib/site';
 import { href } from '@/lib/url';
 
+const members = await getCollection('members');
+
 const recent = published.slice(0, 3);
+
+/* Three most recent news items, whatever their kind. */
+const latestNews = (await getCollection('news'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
 const labAddress = addressLines(contact.lab.room);
 
 const structuredData = {
@@ -139,7 +148,7 @@ const structuredData = {
           >
             <dt class="text-sm text-[var(--color-ink-muted)]">Current members</dt>
             <dd class="font-serif text-2xl font-semibold text-[var(--color-brand)]">
-              {members.length + 1}
+              {members.length}
             </dd>
           </div>
           <div class="flex items-baseline justify-between gap-4">
@@ -218,6 +227,18 @@ const structuredData = {
         See the full gallery
         <Icon name="lucide:arrow-right" class="size-4" aria-hidden="true" />
       </a>
+    </p>
+  </Section>
+
+  <!-- ========================== In the news ========================== -->
+  <Section eyebrow="News" title="In the news">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
+      <ol class="divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
+        {latestNews.map((entry) => <NewsItem entry={entry} />)}
+      </ol>
+    </div>
+    <p class="mt-8">
+      <Button href={href('/news')} variant="secondary">All news and press</Button>
     </p>
   </Section>
 

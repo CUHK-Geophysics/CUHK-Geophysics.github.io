@@ -20,3 +20,7 @@ pnpm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# python bytecode from running the vendored skill scripts
+__pycache__/
+*.py[cod]
