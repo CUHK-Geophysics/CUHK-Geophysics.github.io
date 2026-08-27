@@ -43,7 +43,7 @@ export const contact = {
   },
   /** Official campus map, for visitors finding the building. */
   campusMap: 'https://www.cuhk.edu.hk/english/campus/cuhk-campus-map.html',
-  shuttle: 'https://www.cuhk.edu.hk/campus-shuttle',
+  shuttle: 'https://transport.cuhk.edu.hk/route/3/',
 } as const;
 
 export const piEmail = `${contact.pi.emailUser}@${contact.pi.emailDomain}`;
@@ -72,6 +72,7 @@ export const nav: readonly NavItem[] = [
   { label: 'Publications', href: '/publications' },
   { label: 'Team', href: '/team' },
   { label: 'Teaching', href: '/teaching' },
+  { label: 'News', href: '/news' },
   { label: 'Gallery', href: '/gallery' },
   { label: 'Join Us', href: '/join' },
   { label: 'Contact', href: '/contact' },

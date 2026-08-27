@@ -1,17 +1,26 @@
 ---
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 
-import ExternalLink from '@/components/ExternalLink.astro';
 import Section from '@/components/Section.astro';
-import { alumni, members, principalInvestigator, trackLabels, tracksInOrder } from '@/data/team';
+import SocialLinks from '@/components/SocialLinks.astro';
+import { alumni } from '@/data/team';
 import PageLayout from '@/layouts/PageLayout.astro';
+import { formatJoined, groupByTrack, trackLabels } from '@/lib/members';
 import { piEmail, site } from '@/lib/site';
 import { href } from '@/lib/url';
 
-const grouped = tracksInOrder
-  .map((track) => ({ track, people: members.filter((m) => m.track === track) }))
-  .filter((g) => g.people.length > 0);
+/*
+ * People come from Markdown so the group can maintain their own entries — see
+ * docs/ADD-A-MEMBER.md. The PI is one of those files too, marked `track: pi`,
+ * and is pulled out here to be rendered by the featured card.
+ */
+const all = await getCollection('members');
+const pi = all.find((m) => m.data.track === 'pi');
+if (!pi) throw new Error('No member file has `track: pi`; the team page needs one.');
+
+const grouped = groupByTrack(all.filter((m) => m.data.track !== 'pi'));
 
 const structuredData = {
   '@context': 'https://schema.org',
@@ -20,18 +29,20 @@ const structuredData = {
   about: [
     {
       '@type': 'Person',
-      name: principalInvestigator.name,
-      jobTitle: principalInvestigator.role,
+      name: pi.data.name,
+      jobTitle: pi.data.role,
       email: piEmail,
-      url: principalInvestigator.links[0].href,
+      ...(pi.data.socials?.profile ? { url: pi.data.socials.profile } : {}),
       worksFor: { '@type': 'CollegeOrUniversity', name: site.university.name },
     },
-    ...members.map((m) => ({
-      '@type': 'Person',
-      name: m.name,
-      jobTitle: m.role,
-      worksFor: { '@type': 'CollegeOrUniversity', name: site.university.name },
-    })),
+    ...all
+      .filter((m) => m.data.track !== 'pi')
+      .map((m) => ({
+        '@type': 'Person',
+        name: m.data.name,
+        jobTitle: m.data.role,
+        worksFor: { '@type': 'CollegeOrUniversity', name: site.university.name },
+      })),
   ],
 };
 ---
@@ -50,8 +61,8 @@ const structuredData = {
       class="grid gap-8 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-2)] p-6 sm:grid-cols-[13rem_minmax(0,1fr)] sm:p-8 md:gap-10 lg:grid-cols-[16rem_minmax(0,1fr)]"
     >
       <Image
-        src={principalInvestigator.photo}
-        alt={`Portrait of ${principalInvestigator.name}`}
+        src={pi.data.photo}
+        alt={`Portrait of ${pi.data.name}`}
         widths={[256, 384, 512]}
         sizes="(min-width: 1024px) 256px, (min-width: 640px) 208px, 60vw"
         loading="eager"
@@ -60,21 +71,30 @@ const structuredData = {
 
       <div>
         <h2 class="text-2xl">
-          {principalInvestigator.name}, {principalInvestigator.qualification}
-          <span lang="zh-Hant" class="ml-1.5 font-normal text-[var(--color-ink-muted)]">
-            ({principalInvestigator.nameChinese})
-          </span>
+          {pi.data.name}{pi.data.qualification ? `, ${pi.data.qualification}` : ''}
+          {
+            pi.data.nameChinese && (
+              <span lang="zh-Hant" class="ml-1.5 font-normal text-[var(--color-ink-muted)]">
+                ({pi.data.nameChinese})
+              </span>
+            )
+          }
         </h2>
-        <p class="mt-1 font-bold text-[var(--color-brand)]">{principalInvestigator.role}</p>
+        <p class="mt-1 font-bold text-[var(--color-brand)]">{pi.data.role}</p>
         <p class="mt-4 max-w-xl leading-relaxed text-[var(--color-ink-muted)]">
-          {principalInvestigator.interest}
+          {pi.data.interest}
         </p>
+        {pi.data.bio && <p class="mt-3 max-w-xl text-[var(--color-ink-muted)]">{pi.data.bio}</p>}
 
         <dl class="mt-6 space-y-2 text-sm">
-          <div class="flex flex-wrap gap-x-2">
-            <dt class="font-bold text-[var(--color-ink)]">Office</dt>
-            <dd class="text-[var(--color-ink-muted)]">{principalInvestigator.office}</dd>
-          </div>
+          {
+            pi.data.office && (
+              <div class="flex flex-wrap gap-x-2">
+                <dt class="font-bold text-[var(--color-ink)]">Office</dt>
+                <dd class="text-[var(--color-ink-muted)]">{pi.data.office}</dd>
+              </div>
+            )
+          }
           <div class="flex flex-wrap gap-x-2">
             <dt class="font-bold text-[var(--color-ink)]">Email</dt>
             <dd>
@@ -87,15 +107,12 @@ const structuredData = {
           </div>
         </dl>
 
-        <ul class="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-          {
-            principalInvestigator.links.map((link) => (
-              <li>
-                <ExternalLink href={link.href}>{link.label}</ExternalLink>
-              </li>
-            ))
-          }
-        </ul>
+        <SocialLinks
+          socials={pi.data.socials}
+          personName={pi.data.name}
+          variant="labelled"
+          class="mt-5 -ml-2"
+        />
       </div>
     </article>
   </Section>
@@ -121,11 +138,11 @@ const structuredData = {
             {people.map((member) => (
               <article
                 class="flex h-full flex-col overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)]"
-                id={member.slug}
+                id={member.id}
               >
                 <Image
-                  src={member.photo}
-                  alt={`Portrait of ${member.name}`}
+                  src={member.data.photo}
+                  alt={`Portrait of ${member.data.name}`}
                   widths={[240, 360, 480]}
                   sizes="(min-width: 1280px) 260px, (min-width: 1024px) 300px, (min-width: 640px) 44vw, 88vw"
                   loading="lazy"
@@ -133,16 +150,38 @@ const structuredData = {
                 />
                 <div class="flex flex-1 flex-col p-5">
                   <h4 class="font-serif text-lg leading-snug font-semibold text-balance">
-                    {member.name}
+                    {member.data.name}
+                    {member.data.nameChinese && (
+                      <span lang="zh-Hant" class="font-normal text-[var(--color-ink-muted)]">
+                        {' '}
+                        ({member.data.nameChinese})
+                      </span>
+                    )}
                   </h4>
-                  <p class="mt-1 text-sm font-bold text-[var(--color-brand)]">{member.role}</p>
-                  <p class="mt-3 flex-1 text-sm leading-relaxed text-[var(--color-ink-muted)]">
-                    {member.interest}
+                  <p class="mt-1 text-sm font-bold text-[var(--color-brand)]">{member.data.role}</p>
+                  <p class="mt-3 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+                    {member.data.interest}
                   </p>
+                  {member.data.bio && (
+                    <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-subtle)]">
+                      {member.data.bio}
+                    </p>
+                  )}
+
+                  {/* Pushes the metadata row to the bottom so cards of
+                      differing text length still line their footers up. */}
+                  <div class="flex-1" />
+
                   <p class="mt-4 flex items-center gap-1.5 text-xs text-[var(--color-ink-subtle)]">
                     <Icon name="lucide:calendar" class="size-3.5 shrink-0" aria-hidden="true" />
-                    In the group since {member.since}
+                    In the group since {formatJoined(member.data.joined)}
                   </p>
+
+                  <SocialLinks
+                    socials={member.data.socials}
+                    personName={member.data.name}
+                    class="mt-2 -ml-1.5"
+                  />
                 </div>
               </article>
             ))}

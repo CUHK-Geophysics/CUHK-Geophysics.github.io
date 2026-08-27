@@ -1,0 +1,64 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+
+import PageLayout from '@/layouts/PageLayout.astro';
+import { formatNewsDate, kindLabels, newsDateTimeAttr } from '@/lib/news';
+import { site } from '@/lib/site';
+import { href } from '@/lib/url';
+
+/**
+ * Pages exist only for the group's own announcements. An item carrying a `url`
+ * is somebody else's article, so it gets no page here — the list links straight
+ * out to the publisher instead.
+ */
+export async function getStaticPaths() {
+  const posts = await getCollection('news', (entry) => !entry.data.url);
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: entry.data.title,
+  datePublished: entry.data.date.toISOString().slice(0, 10),
+  publisher: { '@type': 'Organization', name: site.longName },
+  ...(entry.data.author ? { author: { '@type': 'Person', name: entry.data.author } } : {}),
+};
+---
+
+<PageLayout
+  title={entry.data.title}
+  heading={entry.data.title}
+  eyebrow={kindLabels[entry.data.kind]}
+  description={entry.data.excerpt ?? `${entry.data.title} — ${site.longName}.`}
+  structuredData={structuredData}
+>
+  <Fragment slot="header-extra">
+    <p class="mt-4 flex flex-wrap items-baseline gap-x-3 text-sm text-[var(--color-ink-muted)]">
+      <time datetime={newsDateTimeAttr(entry.data)} class="tabular-nums">
+        {formatNewsDate(entry.data)}
+      </time>
+      {entry.data.author && <span>· {entry.data.author}</span>}
+    </p>
+  </Fragment>
+
+  <div class="container-page py-12 md:py-16">
+    <article class="prose-page">
+      <Content />
+    </article>
+
+    <p class="mt-12">
+      <a
+        href={href('/news')}
+        class="inline-flex items-center gap-1.5 font-bold text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+      >
+        <Icon name="lucide:arrow-left" class="size-4" aria-hidden="true" />
+        All news
+      </a>
+    </p>
+  </div>
+</PageLayout>

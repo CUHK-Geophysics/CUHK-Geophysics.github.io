@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 
 import logo from '@/assets/brand/logo.png';
+import SeismogramTrace from '@/components/SeismogramTrace.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { nav, piEmail, site } from '@/lib/site';
 import { href } from '@/lib/url';
@@ -78,6 +79,13 @@ const destinations = nav.filter((item) => item.href !== '/');
         />
       </div>
     </div>
+
+    <figure class="mt-2 pb-6">
+      <SeismogramTrace class="h-24 md:h-32" />
+      <figcaption class="container-page mt-2 text-sm text-[var(--color-ink-subtle)]">
+        No phases picked at this address.
+      </figcaption>
+    </figure>
   </section>
 
   <!-- Every destination on the site -->

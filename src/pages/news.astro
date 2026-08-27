@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+
+import NewsItem from '@/components/NewsItem.astro';
+import PageLayout from '@/layouts/PageLayout.astro';
+import { groupNewsByYear, sortNews } from '@/lib/news';
+import { site } from '@/lib/site';
+
+const all = await getCollection('news');
+const byYear = groupNewsByYear(all);
+const sorted = sortNews(all);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `News — ${site.longName}`,
+  hasPart: sorted.slice(0, 20).map((entry) => ({
+    '@type': 'NewsArticle',
+    headline: entry.data.title,
+    datePublished: entry.data.date.toISOString().slice(0, 10),
+    publisher: { '@type': 'Organization', name: entry.data.outlet },
+    ...(entry.data.url ? { url: entry.data.url } : {}),
+    ...(entry.data.author ? { author: { '@type': 'Person', name: entry.data.author } } : {}),
+  })),
+};
+---
+
+<PageLayout
+  title="News"
+  heading="News and press"
+  eyebrow="News"
+  lead="Coverage of the group's work, awards, and announcements from the laboratory."
+  description="News about the CUHK Geophysics Laboratory: press coverage of the group's research, awards and laboratory announcements."
+  structuredData={structuredData}
+>
+  <div class="container-page py-12">
+    <div class="grid gap-10 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-12">
+      <!-- Year rail, matching the pattern on the publications page -->
+      <aside class="lg:sticky lg:top-24 lg:self-start">
+        <nav aria-labelledby="news-year-heading">
+          <h2
+            id="news-year-heading"
+            class="text-2xs font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase"
+          >
+            Jump to year
+          </h2>
+          <ul class="mt-3 flex flex-wrap gap-1.5">
+            {
+              byYear.map(({ year }) => (
+                <li>
+                  <a
+                    href={`#y${year}`}
+                    class="inline-block rounded-sm px-2.5 py-1.5 text-sm text-[var(--color-ink-muted)] tabular-nums underline decoration-1 underline-offset-2 hover:bg-[var(--color-surface-2)] hover:text-[var(--color-brand)]"
+                  >
+                    {year}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <p class="mt-8 text-sm leading-relaxed text-[var(--color-ink-subtle)]">
+          Items linking to another publication open on that publication's own site.
+        </p>
+      </aside>
+
+      <div>
+        {
+          byYear.map(({ year, items }) => (
+            <section id={`y${year}`} class="mt-14 scroll-mt-24 first:mt-0">
+              <h2 class="border-b-2 border-[var(--color-brand)] pb-2 font-serif text-2xl tabular-nums">
+                {year}
+              </h2>
+              <ol class="mt-2">
+                {items.map((entry) => (
+                  <NewsItem entry={entry} />
+                ))}
+              </ol>
+            </section>
+          ))
+        }
+
+        {
+          all.length === 0 && (
+            <p class="rounded-md border border-[var(--color-line)] bg-[var(--color-surface-2)] p-6 text-[var(--color-ink-muted)]">
+              There is nothing here yet.
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</PageLayout>

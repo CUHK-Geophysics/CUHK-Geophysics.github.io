@@ -1,0 +1,64 @@
+---
+/**
+ * A member's accounts, as a row of icon links.
+ *
+ * Two shapes: `icons` for the compact team-grid cards, and `labelled` for the
+ * wider featured card where there is room to spell each destination out.
+ *
+ * Every link's accessible name states both the platform and whose account it
+ * is — "Hui LIU: GitHub profile" — because a screen-reader user listing the
+ * links on this page would otherwise hear "profile" a dozen times over with no
+ * way to tell them apart.
+ *
+ * The 32px minimum box on each link keeps every icon target above the 24px
+ * floor (WCAG 2.5.8) without making the row look like a toolbar.
+ */
+import { Icon } from 'astro-icon/components';
+
+import { resolveSocials, type MemberEntry } from '@/lib/members';
+
+interface Props {
+  socials: MemberEntry['data']['socials'];
+  /** Whose accounts these are, used in each link's accessible name. */
+  personName: string;
+  variant?: 'icons' | 'labelled';
+  class?: string;
+}
+
+const { socials, personName, variant = 'icons', class: className = '' } = Astro.props as Props;
+
+const links = resolveSocials(socials);
+---
+
+{
+  links.length > 0 && (
+    <ul
+      class:list={[
+        'flex flex-wrap items-center',
+        variant === 'icons' ? 'gap-0.5' : 'gap-x-1 gap-y-1.5',
+        className,
+      ]}
+    >
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            target={link.isMail ? undefined : '_blank'}
+            rel={link.isMail ? undefined : 'me noopener noreferrer'}
+            class:list={[
+              'inline-flex min-h-8 cursor-pointer items-center gap-1.5 rounded-md text-[var(--color-ink-subtle)] transition-colors duration-[var(--duration-micro)] hover:bg-[var(--color-brand-wash)] hover:text-[var(--color-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]',
+              variant === 'icons' ? 'min-w-8 justify-center' : 'px-2 text-sm',
+            ]}
+          >
+            <Icon name={link.icon} class="size-4 shrink-0" aria-hidden="true" />
+            {variant === 'labelled' && <span>{link.short}</span>}
+            <span class="sr-only">
+              {personName}: {link.label}
+              {link.isMail ? '' : ' (opens in a new tab)'}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
