@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 
+import newsBanner from '@/assets/banners/news.jpg';
+
 import NewsItem from '@/components/NewsItem.astro';
 import PageLayout from '@/layouts/PageLayout.astro';
 import { groupNewsByYear, sortNews } from '@/lib/news';
@@ -32,6 +34,7 @@ const structuredData = {
   lead="Coverage of the group's work, awards, and announcements from the laboratory."
   description="News about the CUHK Geophysics Laboratory: press coverage of the group's research, awards and laboratory announcements."
   structuredData={structuredData}
+  banner={newsBanner}
 >
   <div class="container-page py-12">
     <div class="grid gap-10 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-12">
