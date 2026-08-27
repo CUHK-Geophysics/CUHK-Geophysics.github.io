@@ -128,16 +128,44 @@ const byNumber = new Map(publications.map((p) => [p.n, p]));
               </div>
 
               <figure class:list={[i % 2 === 1 && 'lg:order-1']}>
-                <Image
-                  src={theme.image}
-                  alt={theme.imageAlt}
-                  widths={[480, 720, 1080]}
-                  sizes="(min-width: 1024px) 560px, 92vw"
-                  quality={74}
-                  loading="lazy"
-                  fetchpriority="low"
-                  class="aspect-[4/3] w-full rounded-lg object-cover"
-                />
+                {/*
+                  These are figures from the group's papers, not photographs, so
+                  they are shown whole at their own aspect ratio. A fixed frame
+                  with object-cover would crop axis labels and colour bars off
+                  the edges. The white panel is deliberate: the figures have
+                  white backgrounds, so in dark mode they read as mounted plates
+                  rather than bleeding into the page.
+                */}
+                {/*
+                  Linked to the original: these panels carry axis labels, colour
+                  bars and annotations that are small at the rendered width, and
+                  a reader who wants to actually read them needs the full file.
+                  A plain link does that without any JavaScript.
+                */}
+                <a
+                  href={theme.image.src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="group block rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]"
+                >
+                  <Image
+                    src={theme.image}
+                    alt={theme.imageAlt}
+                    widths={[480, 720, theme.image.width]}
+                    sizes="(min-width: 1024px) 560px, 92vw"
+                    quality={88}
+                    loading="lazy"
+                    fetchpriority="low"
+                    class="h-auto w-full rounded-md bg-white ring-1 ring-[var(--color-line)] transition-shadow duration-[var(--duration-base)] group-hover:ring-2 group-hover:ring-[var(--color-brand)]"
+                  />
+                  <span class="sr-only"> — open the full-size figure in a new tab</span>
+                </a>
+                <figcaption class="mt-3 flex flex-wrap items-baseline gap-x-2 text-sm leading-relaxed text-[var(--color-ink-subtle)]">
+                  <span>{theme.imageCaption}</span>
+                  <span aria-hidden="true" class="text-[var(--color-brand)]">
+                    Select to enlarge.
+                  </span>
+                </figcaption>
               </figure>
             </div>
           </div>

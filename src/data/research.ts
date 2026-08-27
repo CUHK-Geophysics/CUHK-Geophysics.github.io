@@ -1,10 +1,10 @@
 import type { ImageMetadata } from 'astro';
 
-import alvinDeck from '@/assets/gallery/09-alvin.jpg';
-import fumaroles from '@/assets/gallery/01-xiaoyoukeng.jpg';
-import katmai from '@/assets/gallery/10-katmai.jpg';
-import obsDeck from '@/assets/gallery/06-picture-1.jpg';
-import ridge from '@/assets/gallery/03-group-fieldwork.jpg';
+import figLowFrequency from '@/assets/research/low-frequency-earthquakes.jpg';
+import figMachineLearning from '@/assets/research/machine-learning.jpg';
+import figStressChanges from '@/assets/research/stress-changes.jpg';
+import figSurfaceProcesses from '@/assets/research/surface-processes.jpg';
+import figVolcanicSystems from '@/assets/research/volcanic-systems.jpg';
 
 /**
  * The five research themes, carried over from the previous site.
@@ -23,6 +23,8 @@ export interface Theme {
   readonly body: readonly string[];
   readonly image: ImageMetadata;
   readonly imageAlt: string;
+  /** Short visible caption. Describes the figure only — no interpretation. */
+  readonly imageCaption: string;
   /** Publication numbers (see src/data/publications.ts) that anchor the theme. */
   readonly keyPublications: readonly number[];
 }
@@ -52,9 +54,11 @@ export const themes: readonly Theme[] = [
       'We have applied machine learning to identify eruption precursors, to improve detection of different types of seismic events, and to produce high-resolution earthquake catalogues that map fault structures and constrain earthquake interactions.',
       'Those catalogues have let us characterise foreshock sequences and swarms, including along oceanic transform faults where conventional detection thresholds leave most of the seismicity unseen.',
     ],
-    image: obsDeck,
+    image: figMachineLearning,
     imageAlt:
-      'Researchers behind a yellow ocean-bottom seismometer on a ship deck, the instrument that records the data these methods are trained on.',
+      'Recall, precision and F1 score for P- and S-wave picking by PhaseNet and EQTransformer as a function of frequency index, comparing the published models with versions retrained in this study, together with the frequency-index and signal-to-noise distributions of the training data.',
+    imageCaption:
+      'Phase-picking performance against frequency index, for published models and models retrained here.',
     keyPublications: [13, 21, 25, 30, 33, 38],
   },
   {
@@ -66,9 +70,11 @@ export const themes: readonly Theme[] = [
       'We recognised that external stress perturbations can modulate fault slip behaviour and earthquake nucleation. In both systematic surveys and isolated case studies, we have demonstrated how tidal stress affects earthquake rates and frequency–magnitude distributions, constraining frictional properties.',
       'We have also identified how dynamic triggering by teleseismic waves, reservoir-induced seismicity, and landslide-dammed lakes reveal the state of stress on faults.',
     ],
-    image: ridge,
+    image: figStressChanges,
     imageAlt:
-      'Group members on a rocky ridge above a cloud-filled volcanic slope during a field campaign.',
+      'Schematic block of a mountain valley where landslides have dammed a river to form a lake. Arrows show direct loading from the impounded water and fluid diffusion into the rock beneath, triggering an earthquake below the dam.',
+    imageCaption:
+      'How a landslide dam loads the rock beneath it, through both direct loading and fluid diffusion.',
     keyPublications: [4, 7, 9, 22, 23, 27],
   },
   {
@@ -80,9 +86,11 @@ export const themes: readonly Theme[] = [
       'We are interested in the structural dynamics and hazard assessment of submarine and subaerial volcanic systems. Using ocean-bottom seismometer (OBS) data, we analyse microearthquakes, mixed-frequency earthquakes, tremors, and seismo-acoustic events to characterise magmatic processes and seismic velocity changes.',
       'With machine learning platforms, we develop models for detecting long-period and volcano-tectonic earthquakes, and we continue to push the limits of what OBS networks can resolve about an active volcanic system.',
     ],
-    image: katmai,
+    image: figVolcanicSystems,
     imageAlt:
-      'A researcher at the rim of a turquoise crater lake ringed by snow, on a volcano in Alaska.',
+      'Three-dimensional block diagram of a submarine volcano. Bathymetry is shown above; below it, two tremor phases migrate upward from the axial melt lens through the lower and upper crust at roughly 1.8 and 1.1 kilometres per hour in the days before an eruption.',
+    imageCaption:
+      'Tremor migrating upward from the axial melt lens in the days before a submarine eruption.',
     keyPublications: [1, 2, 24, 35, 37],
   },
   {
@@ -94,9 +102,11 @@ export const themes: readonly Theme[] = [
       'We are intrigued by the spatiotemporal clustering and scaling properties of low-frequency earthquakes (LFEs), and we apply these insights to large-scale studies of slow-slip events and fault slip velocities.',
       'We investigate LFE source processes to track fluid and magma movement and to support eruption forecasting. We like to bring a statistical seismology perspective to the table, to understand the relative importance of tectonic and volcanic loading in shaping the fault systems we observe today.',
     ],
-    image: alvinDeck,
+    image: figLowFrequency,
     imageAlt:
-      'Two researchers beside the deep-submergence vehicle Alvin on the deck of its support ship.',
+      'Seismic moment plotted against rupture duration for two event populations, coloured by frequency index, beside three-component waveforms at station SN07 comparing a regular event with a low-frequency one.',
+    imageCaption:
+      'Moment against rupture duration for two event populations, and how their waveforms differ.',
     keyPublications: [12, 18, 32, 36],
   },
   {
@@ -108,9 +118,11 @@ export const themes: readonly Theme[] = [
       'A major challenge in geohazard science is the inability to directly monitor and quantify rapid mass movements and their cascading impacts. We use seismic methods to quantify the dynamics of large landslides, dam breaches, and outburst floods.',
       'In recent work we discovered that landslide hazard cascades can trigger earthquakes, revealing previously unrecognised linkages between surface and subsurface hazards. Our long-term goal is to increase the information content of every seismic record, to reveal the full chain of geophysical events and improve multi-hazard early warning.',
     ],
-    image: fumaroles,
+    image: figSurfaceProcesses,
     imageAlt:
-      'Students on a walkway below a steaming, sulphur-stained hillside during a field course in Taiwan.',
+      'Map of broadband seismic stations across Asia that recorded a single event near Lhasa, with the aligned waveform section, the vertical-component velocity trace at station LSA and its spectrogram.',
+    imageCaption:
+      'A large mass movement recorded at regional and teleseismic distance, from station map to spectrogram.',
     keyPublications: [20, 23, 31, 39],
   },
 ];
