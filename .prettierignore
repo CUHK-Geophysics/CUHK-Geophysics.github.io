@@ -5,3 +5,14 @@ node_modules/
 .claude-plugin/
 design-system/
 package-lock.json
+
+# Content the lab maintains by hand.
+#
+# These files are edited by group members who do not write code, following
+# docs/ADD-A-MEMBER.md and docs/ADD-NEWS.md. Their correctness is already
+# enforced by the Zod schemas in src/content.config.ts, which fail the build and
+# name the offending file. Holding hand-written YAML to Prettier's formatting on
+# top of that adds nothing and turns a stray space into a red CI run for someone
+# who cannot read the error — which is exactly what happened the first time a
+# member edited their own entry.
+src/content/
