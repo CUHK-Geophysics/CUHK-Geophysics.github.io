@@ -81,17 +81,43 @@ This gets its own page, and the file name becomes its address — so
 
 ## The fields
 
-| Field           | Required | What it is                                                    |
-| --------------- | -------- | ------------------------------------------------------------- |
-| `title`         | yes      | The headline.                                                 |
-| `date`          | yes      | `YYYY-MM-DD`.                                                 |
-| `datePrecision` | no       | `year` or `month`, when the full date is unknown.             |
-| `outlet`        | yes      | Who published it. For our own posts: `Geophysics Laboratory`. |
-| `url`           | no       | Their article. **Leave out entirely for our own posts.**      |
-| `author`        | no       | The journalist or author.                                     |
-| `lang`          | no       | `en` (default), `zh-Hant` or `zh-Hans`.                       |
-| `kind`          | yes      | `coverage`, `award` or `announcement`.                        |
-| `excerpt`       | no       | One or two sentences shown under the title.                   |
+| Field           | Required     | What it is                                                    |
+| --------------- | ------------ | ------------------------------------------------------------- |
+| `title`         | yes          | The headline.                                                 |
+| `date`          | yes          | `YYYY-MM-DD`.                                                 |
+| `datePrecision` | no           | `year` or `month`, when the full date is unknown.             |
+| `outlet`        | yes          | Who published it. For our own posts: `Geophysics Laboratory`. |
+| `url`           | no           | Their article. **Leave out entirely for our own posts.**      |
+| `author`        | no           | The journalist or author.                                     |
+| `lang`          | no           | `en` (default), `zh-Hant` or `zh-Hans`.                       |
+| `kind`          | yes          | `coverage`, `award` or `announcement`.                        |
+| `excerpt`       | no           | One or two sentences shown under the title.                   |
+| `image`         | no           | Thumbnail, e.g. `../../assets/news/2026-01-01-my-item.jpg`.   |
+| `imageAlt`      | with `image` | What is in the picture, for people who cannot see it.         |
+| `imageCredit`   | no           | Who the picture belongs to. Printed under the thumbnail.      |
 
 Items sort themselves by date, newest first, and group by year. You do not need
 to put them in any particular order.
+
+## Adding a picture
+
+Put the file in `src/assets/news/`, name it after your Markdown file, and point
+`image` at it. Everything else — resizing, modern formats, lazy loading — is
+handled for you, so upload the picture at whatever size you have it.
+
+Three things worth knowing:
+
+- **It is shown small**, as a 4:3 thumbnail about the size of a postage stamp on
+  a phone. Photographs survive that; dense multi-panel figures do not. If you
+  cannot tell what a picture is at thumbnail size, pick a different one.
+- **Always fill in `imageAlt`.** Describe what is in the frame — "two
+  researchers on a ship deck beside a yellow seismometer", not "news photo".
+- **Credit anything that is not ours.** If you take the picture from the article
+  that wrote about us, set `imageCredit` to who it belongs to. Their caption
+  usually tells you: a line like "Photo: Shutterstock" means the outlet licensed
+  it from an agency, and the agency is the one to credit. Keep it to a few
+  words — it sits under a thumbnail and a long credit stacks up into a column.
+
+An item with no picture renders as a plain text row, which is exactly right for
+a short announcement. Leave the fields out rather than reaching for a filler
+image.

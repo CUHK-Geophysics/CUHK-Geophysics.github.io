@@ -10,6 +10,7 @@ author: 'Alex Frew McMillan'
 url: 'https://www.iso.cuhk.edu.hk/english/publications/cuhkupdates/article.aspx?articleid=4012'
 kind: coverage
 excerpt: 'The Axial underwater seamount acts as a real-time lab for Tan Yen Joe.'
-image: ../../assets/gallery/10-katmai.jpg
-imageAlt: 'A researcher in orange field clothing at the rim of a turquoise crater lake ringed by snow, on a volcano in Alaska.'
+image: ../../assets/news/2021-cuhkupdates-predicting-volcanoes.jpg
+imageAlt: 'Professor Yen Joe Tan leaning over a mirror-still water surface that reflects him, with hazy mountains behind.'
+imageCredit: 'Photo: CUHKUPDates'
 ---
