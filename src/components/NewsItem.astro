@@ -9,6 +9,10 @@
  * The thumbnail falls back to an empty alt when an entry gives no description:
  * the headline beside it already carries the meaning, so a missing description
  * should make the image decorative rather than announce a filename.
+ *
+ * Most of these pictures belong to the outlet that ran the story, so `imageCredit`
+ * prints under the thumbnail. It is deliberately part of the row rather than a
+ * hover title: a credit nobody can see is not a credit.
  */
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
@@ -25,7 +29,8 @@ interface Props {
 }
 
 const { entry, as: Heading = 'h3', eager = false } = Astro.props as Props;
-const { title, outlet, url, lang, kind, author, excerpt, image, imageAlt } = entry.data;
+const { title, outlet, url, lang, kind, author, excerpt, image, imageAlt, imageCredit } =
+  entry.data;
 
 const external = Boolean(url);
 const target = url ?? href(`/news/${entry.id}`);
@@ -41,15 +46,25 @@ const isChinese = lang !== 'en';
   >
     {
       image && (
-        <Image
-          src={image}
-          alt={imageAlt ?? ''}
-          widths={[176, 320, 480]}
-          sizes="(min-width: 640px) 160px, 88px"
-          quality={78}
-          loading={eager ? 'eager' : 'lazy'}
-          class="aspect-[4/3] w-full rounded-md border border-[var(--color-line)] bg-[var(--color-surface-2)] object-cover"
-        />
+        <div>
+          <Image
+            src={image}
+            alt={imageAlt ?? ''}
+            widths={[176, 320, 480]}
+            sizes="(min-width: 640px) 160px, 88px"
+            quality={78}
+            loading={eager ? 'eager' : 'lazy'}
+            class="aspect-[4/3] w-full rounded-md border border-[var(--color-line)] bg-[var(--color-surface-2)] object-cover"
+          />
+          {imageCredit && (
+            <p
+              class="text-2xs mt-1.5 leading-tight text-[var(--color-ink-muted)]"
+              lang={/[^\x00-\x7F]/.test(imageCredit) ? 'zh-Hant' : undefined}
+            >
+              {imageCredit}
+            </p>
+          )}
+        </div>
       )
     }
 

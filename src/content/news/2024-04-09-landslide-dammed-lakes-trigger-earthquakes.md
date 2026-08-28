@@ -5,6 +5,7 @@ outlet: 'CUHK Communications and Public Relations Office'
 url: 'https://www.cpr.cuhk.edu.hk/en/press/cuhk-led-international-research-reveals-for-the-first-time-that-landslide-dammed-lakes-can-trigger-earthquakes-discovery-has-implications-for-future-disaster-management-and-mitigation/'
 kind: coverage
 excerpt: 'The discovery has implications for future disaster management and mitigation.'
-image: ../../assets/research/stress-changes.jpg
-imageAlt: 'Schematic of landslides damming a river to form a lake, with loading and fluid diffusion triggering an earthquake below — the figure from the paper this coverage reports on.'
+image: ../../assets/news/2024-04-09-landslide-dammed-lakes-trigger-earthquakes.jpg
+imageAlt: 'Professor Yen Joe Tan (right) and Dr Liu Min (left) holding posters of the study, in front of a screen showing the 2018 Baige landslide on the Tibetan Plateau.'
+imageCredit: 'Photo: CUHK'
 ---

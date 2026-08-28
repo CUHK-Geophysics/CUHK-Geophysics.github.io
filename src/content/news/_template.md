@@ -46,6 +46,25 @@ kind: coverage
 
 # Optional. One or two sentences shown under the title in the list.
 # excerpt: 'A short summary in our own words.'
+
+# ── Picture ──────────────────────────────────────────────────────────────────
+# Optional, but an item with a picture reads far better in the list.
+#
+# Put the image file in  src/assets/news/  and name it after this file, then
+# point at it the same way as below. Landscape works best; it is shown as a
+# small 4:3 thumbnail, so avoid dense multi-panel figures — they turn into an
+# unreadable smudge at that size. A photograph almost always beats a figure.
+#
+# image: ../../assets/news/2026-01-01-something-happened.jpg
+#
+# Describe the picture for people who cannot see it. Say what is in the frame,
+# not "photo of news article". Required whenever you set `image`.
+# imageAlt: 'Two researchers on a ship deck beside a yellow ocean-bottom seismometer.'
+#
+# Who the picture belongs to. Set this for ANY picture that is not ours — a
+# press photo, an agency image, a colleague's field photograph. It is printed
+# under the thumbnail exactly as you write it, so keep it to a few words.
+# imageCredit: 'Photo: SCMP'
 ---
 
 Only write here for our own announcements — the text below this line becomes

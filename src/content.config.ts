@@ -103,12 +103,19 @@ const news = defineCollection({
         excerpt: z.string().optional(),
         /**
          * Optional thumbnail, as a path relative to this file, e.g.
-         * `../../assets/gallery/09-alvin.jpg`. Omitted items render as
-         * text-only rows.
+         * `../../assets/news/2024-04-09-landslide-dammed-lakes.jpg`. Omitted
+         * items render as text-only rows.
          */
         image: image().optional(),
         /** Describes the thumbnail for screen readers. Required with `image`. */
         imageAlt: z.string().optional(),
+        /**
+         * Shown under the thumbnail, verbatim. Set this whenever the picture is
+         * someone else's — a press photo, an agency image, a colleague's field
+         * photograph — so the credit travels with it. Written out in full so an
+         * entry can say `Figure:` or `Photo:` as the picture warrants.
+         */
+        imageCredit: z.string().optional(),
       })
       .strict(),
 });
