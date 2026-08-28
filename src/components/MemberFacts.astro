@@ -1,0 +1,58 @@
+---
+/**
+ * The definition list of a member's facts: position, group, start date, office.
+ *
+ * Extracted so the member page can place it either in the sidebar (once there
+ * is prose to sit beside) or in the main column (while there is not) without
+ * the markup being written twice.
+ */
+import type { MemberEntry } from '@/lib/members';
+import { formatJoined, trackLabels } from '@/lib/members';
+import { piEmail } from '@/lib/site';
+
+interface Props {
+  entry: MemberEntry;
+  class?: string;
+}
+
+const { entry, class: className = '' } = Astro.props as Props;
+const d = entry.data;
+const joined = formatJoined(d.joined);
+
+const facts: { term: string; value: string }[] = [
+  { term: 'Position', value: d.role },
+  { term: 'Group', value: trackLabels[d.track] },
+  ...(joined ? [{ term: 'In the group since', value: joined }] : []),
+  ...(d.office ? [{ term: 'Office', value: d.office }] : []),
+];
+---
+
+<dl class:list={['space-y-4 text-sm', className || 'mt-6']}>
+  {
+    facts.map((fact) => (
+      <div>
+        <dt class="text-2xs font-bold tracking-[0.14em] text-[var(--color-ink-subtle)] uppercase">
+          {fact.term}
+        </dt>
+        <dd class="mt-1 text-[var(--color-ink)]">{fact.value}</dd>
+      </div>
+    ))
+  }
+  {
+    d.track === 'pi' && (
+      <div>
+        <dt class="text-2xs font-bold tracking-[0.14em] text-[var(--color-ink-subtle)] uppercase">
+          Email
+        </dt>
+        <dd class="mt-1">
+          <a
+            href={`mailto:${piEmail}`}
+            class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+          >
+            {piEmail}
+          </a>
+        </dd>
+      </div>
+    )
+  }
+</dl>

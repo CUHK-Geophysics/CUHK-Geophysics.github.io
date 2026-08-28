@@ -61,3 +61,36 @@ socials:
   # mastodon: 'https://fediscience.org/@yourhandle'
   # cv: 'https://example.com/your-cv.pdf'
 ---
+
+<!--
+  ─────────────────────────────────────────────────────────────────────────────
+  YOUR PAGE
+
+  Anything you write below this comment block becomes your own page at
+  /team/your-file-name. Leave it empty and your page still works — it shows your
+  photo, position, research interest and links.
+
+  Start headings at "##". The "#" level is already used by your name.
+
+  Formatting: **bold**, *italic*, [link text](https://example.com), and lists
+  made with "-" at the start of a line.
+  ─────────────────────────────────────────────────────────────────────────────
+-->
+
+<!--
+## Research
+
+What you are working on, and why it matters.
+
+## Background
+
+Where you studied and what you did before joining the group.
+
+## Selected publications
+
+- Author, A. and You (2026), Title of the paper, *Journal Name*.
+
+## Beyond research
+
+Teaching, outreach, fieldwork — anything you would like people to know.
+-->

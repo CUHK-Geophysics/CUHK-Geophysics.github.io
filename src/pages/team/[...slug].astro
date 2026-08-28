@@ -1,0 +1,172 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+
+import MemberFacts from '@/components/MemberFacts.astro';
+import SocialLinks from '@/components/SocialLinks.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { resolveSocials, trackLabels } from '@/lib/members';
+import { site } from '@/lib/site';
+import { href } from '@/lib/url';
+
+/**
+ * One page per member, built from their Markdown file.
+ *
+ * Everything above the prose comes from frontmatter, so a member whose body is
+ * still empty gets a complete-looking page — portrait, role, interest and
+ * links — rather than a broken one. The body is theirs to fill in whenever
+ * they get to it; see docs/ADD-A-MEMBER.md.
+ */
+export async function getStaticPaths() {
+  const members = await getCollection('members');
+  return members.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+
+const socials = resolveSocials(d.socials);
+
+/* The body is seeded with commented guidance, which renders to nothing. Only
+   treat it as prose once there is something other than comments in it. */
+const hasProse = (entry.body ?? '').replace(/<!--[\s\S]*?-->/g, '').trim().length > 0;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: d.name,
+  ...(d.nameChinese ? { alternateName: d.nameChinese } : {}),
+  jobTitle: d.role,
+  description: d.interest,
+  worksFor: {
+    '@type': 'CollegeOrUniversity',
+    name: site.university.name,
+    department: { '@type': 'Organization', name: site.department.name },
+  },
+  ...(d.socials?.profile ? { url: d.socials.profile } : {}),
+  ...(d.socials?.email ? { email: d.socials.email } : {}),
+  ...(d.socials
+    ? {
+        sameAs: [
+          d.socials.website,
+          d.socials.scholar,
+          d.socials.orcid,
+          d.socials.researchgate,
+          d.socials.github,
+          d.socials.linkedin,
+          d.socials.x,
+          d.socials.bluesky,
+          d.socials.mastodon,
+        ].filter(Boolean),
+      }
+    : {}),
+};
+---
+
+<BaseLayout
+  title={d.name}
+  description={`${d.name} — ${d.role} in the ${site.longName} at ${site.university.shortName}. ${d.interest}`}
+  structuredData={structuredData}
+>
+  <div class="container-page py-8 md:py-12">
+    <!-- Back to the roster -->
+    <a
+      href={href('/team')}
+      class="-ml-2 inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 text-sm text-[var(--color-ink-muted)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]"
+    >
+      <Icon name="lucide:arrow-left" class="size-4" aria-hidden="true" />
+      All group members
+    </a>
+
+    <div
+      class:list={[
+        'mt-8 grid gap-10',
+        hasProse
+          ? 'lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-14'
+          : 'sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] sm:gap-10 md:gap-14',
+      ]}
+    >
+      <!-- Portrait, and the facts panel when there is prose to sit beside -->
+      <aside class:list={[hasProse && 'lg:sticky lg:top-24 lg:self-start']}>
+        <Image
+          src={d.photo}
+          alt={`Portrait of ${d.name}`}
+          widths={[288, 432, 576]}
+          sizes="(min-width: 1024px) 288px, (min-width: 640px) 15rem, 88vw"
+          loading="eager"
+          class="aspect-square w-full max-w-[18rem] rounded-lg object-cover"
+        />
+
+        {
+          hasProse && (
+            <Fragment>
+              <MemberFacts entry={entry} />
+              {socials.length > 0 && (
+                <div class="mt-6 border-t border-[var(--color-line)] pt-5">
+                  <h2 class="text-2xs mb-3 font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase">
+                    Elsewhere
+                  </h2>
+                  <SocialLinks socials={d.socials} personName={d.name} />
+                </div>
+              )}
+            </Fragment>
+          )
+        }
+      </aside>
+
+      <!-- Name, interest, and either the facts or the prose -->
+      <div class="min-w-0">
+        <p
+          class="text-2xs mb-3 font-sans font-bold tracking-[0.16em] text-[var(--color-brand)] uppercase"
+        >
+          {trackLabels[d.track]}
+        </p>
+        <h1 class="text-4xl">
+          {d.name}{d.qualification ? `, ${d.qualification}` : ''}
+          {
+            d.nameChinese && (
+              <span lang="zh-Hant" class="ml-1.5 font-normal text-[var(--color-ink-muted)]">
+                ({d.nameChinese})
+              </span>
+            )
+          }
+        </h1>
+        <p class="mt-3 text-xl text-[var(--color-brand)]">{d.role}</p>
+
+        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-[var(--color-ink-muted)]">
+          {d.interest}
+        </p>
+        {
+          d.bio && (
+            <p class="mt-4 max-w-2xl leading-relaxed text-[var(--color-ink-muted)]">{d.bio}</p>
+          )
+        }
+
+        {
+          hasProse ? (
+            <div class="prose-page mt-10 border-t border-[var(--color-line)] pt-10">
+              <Content />
+            </div>
+          ) : (
+            /* Nothing written yet: keep the facts and links up here beside the
+               portrait so the page reads as a complete short profile rather
+               than a long empty column. */
+            <Fragment>
+              <MemberFacts entry={entry} class="mt-8 sm:grid sm:grid-cols-2 sm:gap-x-8" />
+              {socials.length > 0 && (
+                <div class="mt-8 border-t border-[var(--color-line)] pt-6">
+                  <h2 class="text-2xs mb-3 font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase">
+                    Elsewhere
+                  </h2>
+                  <SocialLinks socials={d.socials} personName={d.name} />
+                </div>
+              )}
+            </Fragment>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>

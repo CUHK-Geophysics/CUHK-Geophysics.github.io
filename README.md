@@ -39,6 +39,10 @@ so members can maintain their own details without touching TypeScript:
 | A person    | `src/content/members/<name>.md`     | [docs/ADD-A-MEMBER.md](./docs/ADD-A-MEMBER.md) |
 | A news item | `src/content/news/<date>-<slug>.md` | [docs/ADD-NEWS.md](./docs/ADD-NEWS.md)         |
 
+Each member file also builds that person's own page at `/team/<file-name>` from
+the Markdown below its frontmatter. An empty body is fine — the page still shows
+their photo, position, interest and links.
+
 Each folder holds a `_template.md` to copy. The schemas in
 `src/content.config.ts` validate every file at build time, so a mistyped field
 fails the build with a message naming the file rather than publishing a broken
