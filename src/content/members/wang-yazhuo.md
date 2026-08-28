@@ -10,8 +10,10 @@ photo: ./wang-yazhuo.jpg
 # See docs/ADD-A-MEMBER.md for what each one means.
 socials:
   profile: 'https://www.ees.cuhk.edu.hk/staff/wang-yazhuo/'
+  email: 'yazhuowang@link.cuhk.edu.hk'
+  orcid: 'https://orcid.org/0009-0007-3302-8092'
+  
   # website:
-  # email:
   # scholar:
   # orcid:
   # researchgate:
@@ -67,3 +69,19 @@ Where you studied, and what you did before joining the group.
 Anything you would like people to know — teaching, outreach, fieldwork,
 what you do when you are not looking at seismograms.
 -->
+## Research
+
+I am a geophysicist focused on the integration of seismology and computational intelligence. My research aims to leverage advanced data-driven techniques to solve complex problems in seismic monitoring, event detection, and Earth structure characterization.
+
+By combining traditional geophysical principles with deep learning architectures, I work to improve the precision and automation of seismic signal processing, seeking to uncover deeper insights into earthquake mechanisms and geological processes.
+
+## Background
+
+I earned my M.S. in Seismology from Nanjing University. Prior to that, I completed my B.S. in Exploration Technology and Engineering at Jilin University.
+
+## Research interests
+
+- Seismology  
+- Deep Learning and Artificial Intelligence in Geophysics  
+- Seismic signal processing and automation  
+- Earthquake monitoring and detection  
