@@ -5,7 +5,12 @@
  * An item either links out to the outlet that published it, or — when it has no
  * `url` — links in to its own page on this site. Both shapes render the same
  * way, so the list reads consistently whichever kind an entry is.
+ *
+ * The thumbnail falls back to an empty alt when an entry gives no description:
+ * the headline beside it already carries the meaning, so a missing description
+ * should make the image decorative rather than announce a filename.
  */
+import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 
 import { formatNewsDate, kindLabels, newsDateTimeAttr, type NewsEntry } from '@/lib/news';
@@ -15,10 +20,12 @@ interface Props {
   entry: NewsEntry;
   /** Heading level, so pages using this never skip a level. */
   as?: 'h3' | 'h4';
+  /** The first row on a page can load its thumbnail eagerly. */
+  eager?: boolean;
 }
 
-const { entry, as: Heading = 'h3' } = Astro.props as Props;
-const { title, outlet, url, lang, kind, author, excerpt } = entry.data;
+const { entry, as: Heading = 'h3', eager = false } = Astro.props as Props;
+const { title, outlet, url, lang, kind, author, excerpt, image, imageAlt } = entry.data;
 
 const external = Boolean(url);
 const target = url ?? href(`/news/${entry.id}`);
@@ -26,61 +33,88 @@ const isChinese = lang !== 'en';
 ---
 
 <li class="border-t border-[var(--color-line)] py-6 first:border-t-0">
-  <p class="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
-    <time
-      datetime={newsDateTimeAttr(entry.data)}
-      class="font-bold text-[var(--color-brand)] tabular-nums"
-    >
-      {formatNewsDate(entry.data)}
-    </time>
-    <span
-      class="text-[var(--color-ink-muted)]"
-      lang={/[^\x00-\x7F]/.test(outlet) ? 'zh-Hant' : undefined}
-    >
-      {outlet}
-    </span>
+  <div
+    class:list={[
+      'grid gap-4',
+      image && 'grid-cols-[5.5rem_minmax(0,1fr)] sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-6',
+    ]}
+  >
     {
-      kind !== 'coverage' && (
-        <span class="text-2xs rounded-sm bg-[var(--color-brand-wash)] px-2 py-0.5 font-bold tracking-wide text-[var(--color-brand)] uppercase">
-          {kindLabels[kind]}
-        </span>
+      image && (
+        <Image
+          src={image}
+          alt={imageAlt ?? ''}
+          widths={[176, 320, 480]}
+          sizes="(min-width: 640px) 160px, 88px"
+          quality={78}
+          loading={eager ? 'eager' : 'lazy'}
+          class="aspect-[4/3] w-full rounded-md border border-[var(--color-line)] bg-[var(--color-surface-2)] object-cover"
+        />
       )
     }
-  </p>
 
-  <Heading class="mt-1.5 font-serif text-lg leading-snug font-semibold text-balance">
-    <a
-      href={target}
-      target={external ? '_blank' : undefined}
-      rel={external ? 'noopener noreferrer' : undefined}
-      hreflang={external && isChinese ? lang : undefined}
-      class="group hover:text-[var(--color-brand)] hover:underline hover:decoration-1 hover:underline-offset-2"
-    >
-      {
-        /* The page is lang="en"; without this the Chinese headlines are read
+    <div class="min-w-0">
+      <p class="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
+        <time
+          datetime={newsDateTimeAttr(entry.data)}
+          class="font-bold text-[var(--color-brand)] tabular-nums"
+        >
+          {formatNewsDate(entry.data)}
+        </time>
+        <span
+          class="text-[var(--color-ink-muted)]"
+          lang={/[^\x00-\x7F]/.test(outlet) ? 'zh-Hant' : undefined}
+        >
+          {outlet}
+        </span>
+        {
+          kind !== 'coverage' && (
+            <span class="text-2xs rounded-sm bg-[var(--color-brand-wash)] px-2 py-0.5 font-bold tracking-wide text-[var(--color-brand)] uppercase">
+              {kindLabels[kind]}
+            </span>
+          )
+        }
+      </p>
+
+      <Heading class="mt-1.5 font-serif text-lg leading-snug font-semibold text-balance">
+        <a
+          href={target}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noopener noreferrer' : undefined}
+          hreflang={external && isChinese ? lang : undefined}
+          class="group hover:text-[var(--color-brand)] hover:underline hover:decoration-1 hover:underline-offset-2"
+        >
+          {
+            /* The page is lang="en"; without this the Chinese headlines are read
           out with an English voice. */
-      }
-      <span lang={isChinese ? lang : undefined}>{title}</span>
+          }
+          <span lang={isChinese ? lang : undefined}>{title}</span>
+          {
+            external && (
+              <Icon
+                name="lucide:arrow-up-right"
+                class="ml-1 inline-block size-3.5 shrink-0 translate-y-0.5 text-[var(--color-ink-subtle)] group-hover:text-[var(--color-brand)]"
+                aria-hidden="true"
+              />
+            )
+          }
+          {external && <span class="sr-only"> — at {outlet}, opens in a new tab</span>}
+        </a>
+      </Heading>
+
       {
-        external && (
-          <Icon
-            name="lucide:arrow-up-right"
-            class="ml-1 inline-block size-3.5 shrink-0 translate-y-0.5 text-[var(--color-ink-subtle)] group-hover:text-[var(--color-brand)]"
-            aria-hidden="true"
-          />
+        author && (
+          <p class="mt-1 text-sm text-[var(--color-ink-subtle)]">
+            By <span lang={/[^\x00-\x7F]/.test(author) ? 'zh-Hant' : undefined}>{author}</span>
+          </p>
         )
       }
-      {external && <span class="sr-only"> — at {outlet}, opens in a new tab</span>}
-    </a>
-  </Heading>
 
-  {
-    author && (
-      <p class="mt-1 text-sm text-[var(--color-ink-subtle)]">
-        By <span lang={/[^\x00-\x7F]/.test(author) ? 'zh-Hant' : undefined}>{author}</span>
-      </p>
-    )
-  }
-
-  {excerpt && <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-muted)]">{excerpt}</p>}
+      {
+        excerpt && (
+          <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-muted)]">{excerpt}</p>
+        )
+      }
+    </div>
+  </div>
 </li>

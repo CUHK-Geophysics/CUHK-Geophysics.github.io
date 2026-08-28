@@ -7,4 +7,6 @@ lang: zh-Hant
 url: 'https://www.hkej.com/dailynews/culture/article/3026991/'
 kind: coverage
 excerpt: '訪談錄 — an interview with Prof. Tan on studying submarine volcanoes.'
+image: ../../assets/gallery/09-alvin.jpg
+imageAlt: 'Two researchers on a ship deck beside the deep-submergence vehicle Alvin under its launch gantry.'
 ---
