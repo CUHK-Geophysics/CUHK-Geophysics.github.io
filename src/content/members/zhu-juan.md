@@ -10,11 +10,11 @@ photo: ./zhu-juan.jpg
 # See docs/ADD-A-MEMBER.md for what each one means.
 socials:
   profile: 'https://www.ees.cuhk.edu.hk/staff/dr-zhu-juan/'
+  researchgate: 'https://www.researchgate.net/profile/Juan-Zhu'
+  orcid: 'https://orcid.org/0000-0001-9524-614X'
+  email: 'juanzhu@cuhk.edu.hk'
   # website:
-  # email:
   # scholar:
-  # orcid:
-  # researchgate:
   # github:
   # linkedin:
   # x:
