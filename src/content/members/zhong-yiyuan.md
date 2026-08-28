@@ -89,7 +89,7 @@ I received an M.S. in Applied Geophysics from Central South University in 2020, 
 
 ## Selected publications
 
-- Zhong, Y., and Tan, Y. J. (2024), Deep-learning-based phase picking for volcano-tectonic and long-period earthquakes, *Geophysical Research Letters*, 51, e2024GL108438. [https://doi.org/10.1029/2024GL108438](https://doi.org/10.1029/2024GL108438)  
+- Zhong, Y., and Tan, Y. J. (2024), Deep-learning-based phase picking for volcano-tectonic and long-period earthquakes, *Geophysical Research Letters*, 51, e2024GL108438.
 - Zhong, Y., Ren, Z., Tang, J., Lin, Y., Chen, B., Deng, Y., and Jiang, Y. (2022), Constrained gravity inversion with adaptive inversion grid refinement in spherical coordinates and its application to mantle structure beneath Tibetan Plateau, *Journal of Geophysical Research: Solid Earth*, 127, e2021JB022916.  
 - Ren, Z., Chen, C., Zhong, Y., Chen, H., Kalscheuer, T., Maurer, H., Tang, J., and Hu, X. (2020), Exact gravity field for polyhedrons with polynomial density contrasts of arbitrary orders, *Surveys in Geophysics*, 41, 695–722.  
 - Zhong, Y., Ren, Z., Chen, C., Chen, H., Yang, Z., and Guo, Z. (2019), A new method for gravity modeling using tesseroids and 2D Gauss–Legendre quadrature rule, *Journal of Applied Geophysics*, 164, 53–64.  
