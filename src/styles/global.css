@@ -289,6 +289,38 @@
 /* ==========================================================================
    Motion preferences — honoured globally, not per component.
    ========================================================================== */
+/* ==========================================================================
+   Entrance reveal
+
+   Driven by an IntersectionObserver rather than `animation-timeline: view()`:
+   that is Chrome-only, and the CSS minifier folds `animation-timeline` into the
+   `animation` shorthand, where it is invalid — so the rule was silently dropped.
+
+   Elements are visible by default. They are only hidden once the inline script
+   has confirmed both that scripting works and that motion is welcome, and that
+   same script registers the observer, so nothing can be left hidden.
+   ========================================================================== */
+[data-reveal] {
+  opacity: 1;
+}
+
+:root[data-reveal-armed='on'] [data-reveal]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(1.25rem);
+}
+
+:root[data-reveal-armed='on'] [data-reveal] {
+  transition:
+    opacity 620ms var(--ease-out-quart),
+    transform 620ms var(--ease-out-quart);
+  will-change: opacity, transform;
+}
+
+:root[data-reveal-armed='on'] [data-reveal].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

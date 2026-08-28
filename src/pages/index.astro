@@ -6,6 +6,7 @@ import { Icon } from 'astro-icon/components';
 import logo from '@/assets/brand/logo.png';
 import Button from '@/components/Button.astro';
 import Carousel from '@/components/Carousel.astro';
+import SeismicBackdrop from '@/components/SeismicBackdrop.astro';
 import NewsItem from '@/components/NewsItem.astro';
 import ExternalLink from '@/components/ExternalLink.astro';
 import Section from '@/components/Section.astro';
@@ -56,13 +57,33 @@ const structuredData = {
   structuredData={structuredData}
 >
   <!-- ============================ Hero ============================ -->
-  <section class="border-b border-[var(--color-line)] bg-[var(--color-surface-2)]">
-    <div class="container-page py-14 md:py-20">
+  <section
+    class="relative isolate overflow-hidden border-b border-[var(--color-line)] bg-[var(--color-surface-2)]"
+  >
+    <SeismicBackdrop class="-z-10" />
+    {
+      /*
+      Scrim between the backdrop and the text. Measured on the composited
+      pixels: without it a seismic trace crossing the lead paragraph dropped its
+      contrast to 2.05:1 against a 4.5 requirement. Fading rather than a flat
+      wash keeps the artwork fully visible on the right where the globe sits.
+    */
+    }
+    <div
+      class="absolute inset-0 -z-[5] bg-gradient-to-b from-[var(--color-surface-2)] from-58% via-[var(--color-surface-2)]/85 via-74% to-transparent lg:bg-gradient-to-r lg:from-40% lg:via-62%"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="container-page relative py-16 md:py-24">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
-        <div class="max-w-3xl">
+        <div class="max-w-3xl" data-reveal>
           <p
-            class="text-2xs mb-4 font-sans font-bold tracking-[0.16em] text-[var(--color-brand)] uppercase"
+            class="text-2xs mb-4 inline-flex items-center gap-2 font-sans font-bold tracking-[0.16em] text-[var(--color-brand)] uppercase"
           >
+            <span
+              class="inline-block size-1.5 rounded-full bg-[var(--color-brand)] motion-safe:animate-pulse"
+              aria-hidden="true"></span>
             {site.department.name}
           </p>
           <h1 class="text-5xl">
@@ -83,16 +104,30 @@ const structuredData = {
           </div>
         </div>
 
-        <Image
-          src={logo}
-          alt={`${site.longName} emblem: a globe with a seismogram trace above a cross-section of the Earth's crust`}
-          width={220}
-          height={220}
-          densities={[1, 2]}
-          loading="eager"
-          fetchpriority="high"
-          class="mx-auto w-40 lg:w-56"
-        />
+        <!-- The emblem sits over its own ring, echoing the epicentre motif in
+             the backdrop without adding a third moving element. -->
+        <div class="relative mx-auto w-40 shrink-0 lg:w-56">
+          <div
+            class="absolute -inset-6 rounded-full border border-[var(--color-brand)]/30"
+            aria-hidden="true"
+          >
+          </div>
+          <div
+            class="absolute -inset-12 rounded-full border border-[var(--color-brand)]/15"
+            aria-hidden="true"
+          >
+          </div>
+          <Image
+            src={logo}
+            alt={`${site.longName} emblem: a globe with a seismogram trace above a cross-section of the Earth's crust`}
+            width={220}
+            height={220}
+            densities={[1, 2]}
+            loading="eager"
+            fetchpriority="high"
+            class="relative w-full"
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -100,7 +135,7 @@ const structuredData = {
   <!-- ========================= Mission ========================= -->
   <Section>
     <div class="grid gap-12 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-16">
-      <div>
+      <div data-reveal>
         <h2 class="text-3xl">What we do</h2>
         <div class="prose-page mt-6">
           <p>
@@ -128,6 +163,7 @@ const structuredData = {
       <!-- At-a-glance -->
       <aside
         class="h-fit rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-2)] p-6"
+        data-reveal
       >
         <h3
           class="text-2xs font-sans font-bold tracking-[0.14em] text-[var(--color-ink)] uppercase"
@@ -179,18 +215,23 @@ const structuredData = {
   <!-- ====================== Research themes ====================== -->
   <Section
     tone="muted"
+    pattern
     eyebrow="Research"
     title="Five threads that run through our work"
     lead="From deep-learning phase pickers to ocean-bottom seismometers, our projects share one instinct: push the resolution of the seismic record until the process reveals itself."
   >
-    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal>
       {
         themes.map((theme) => (
           <li>
             <a
               href={`${href('/research')}#${theme.id}`}
-              class="group flex h-full flex-col rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] p-6 transition-colors duration-[var(--duration-base)] hover:border-[var(--color-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]"
+              class="group relative flex h-full flex-col overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] p-6 transition-[border-color,box-shadow,transform] duration-[var(--duration-base)] hover:border-[var(--color-brand)] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)] motion-safe:hover:-translate-y-0.5"
             >
+              <span
+                class="absolute inset-y-0 left-0 w-0.5 bg-[var(--color-brand)] transition-transform duration-[var(--duration-base)] motion-safe:scale-y-0 motion-safe:group-hover:scale-y-100"
+                aria-hidden="true"
+              />
               <h3 class="font-serif text-xl font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-brand)]">
                 {theme.title}
               </h3>
@@ -218,7 +259,9 @@ const structuredData = {
     title="Where the data comes from"
     lead="Volcano flanks, crater lakes, ridge crests and research vessels — a look at the group at work."
   >
-    <Carousel photos={featuredPhotos} label="Photographs of the group in the field" />
+    <div data-reveal>
+      <Carousel photos={featuredPhotos} label="Photographs of the group in the field" />
+    </div>
     <p class="mt-6">
       <a
         href={href('/gallery')}
@@ -233,7 +276,10 @@ const structuredData = {
   <!-- ========================== In the news ========================== -->
   <Section eyebrow="News" title="In the news">
     <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
-      <ol class="divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
+      <ol
+        class="divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]"
+        data-reveal
+      >
         {latestNews.map((entry) => <NewsItem entry={entry} />)}
       </ol>
     </div>
