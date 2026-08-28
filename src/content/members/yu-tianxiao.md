@@ -10,11 +10,12 @@ photo: ./yu-tianxiao.jpg
 # See docs/ADD-A-MEMBER.md for what each one means.
 socials:
   profile: 'https://www.ees.cuhk.edu.hk/staff/yu-tianxiao/'
+  email: 'Tianxiao.yu@link.cuhk.edu.hk'
+  scholar: 'https://scholar.google.com/citations?user=2wQcvtcAAAAJ&hl=zh-CN'
+  researchgate: 'https://www.researchgate.net/profile/Tianxiao-Yu-4'
+  orcid: 'https://orcid.org/0000-0003-3560-654X'
+
   # website:
-  # email:
-  # scholar:
-  # orcid:
-  # researchgate:
   # github:
   # linkedin:
   # x:
@@ -67,3 +68,17 @@ Where you studied, and what you did before joining the group.
 Anything you would like people to know — teaching, outreach, fieldwork,
 what you do when you are not looking at seismograms.
 -->
+## Research
+
+I am a geophysicist with research interests in seismology. My work focuses on understanding seismic processes and applying geophysical methods to study the Earth's structure and dynamics.
+
+## Background
+
+I received my M.S. in Geological Resources and Geological Engineering from Central South University in 2025. Previously, I earned my B.S. in Geophysics from Central South University in 2022.
+
+## Research interests
+
+- Seismology  
+- Earthquake processes  
+- Geophysical modeling  
+- Seismic data analysis

@@ -28,7 +28,8 @@ interface Props {
 
 const { class: className = '' } = Astro.props as Props;
 
-const MAP_TOKEN = 'XCtZLg49H0IaND0LEqP7VO0LvSdwmCYvedSCrDi_eBY';
+const MAP_SRC =
+  'https://mapmyvisitors.com/map.js?cl=750f6d&w=a&t=tt&d=XCtZLg49H0IaND0LEqP7VO0LvSdwmCYvedSCrDi_eBY&co=f6f5f7&cmo=dda300&cmn=ff6600&ct=000000';
 ---
 
 <figure class:list={['max-w-2xl', className]}>
@@ -37,10 +38,10 @@ const MAP_TOKEN = 'XCtZLg49H0IaND0LEqP7VO0LvSdwmCYvedSCrDi_eBY';
   >
     <script
       is:inline
-      async
       type="text/javascript"
       id="mapmyvisitors"
-      src={`https://mapmyvisitors.com/map.js?d=${MAP_TOKEN}&cl=ffffff&w=a`}></script>
+      src={MAP_SRC}
+    ></script>
   </div>
   <figcaption class="mt-3 text-sm text-[var(--color-ink-subtle)]">
     Recent visitors to this site, plotted by approximate location. Counts and map data come from{

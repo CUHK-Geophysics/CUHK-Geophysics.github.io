@@ -10,13 +10,13 @@ photo: ./liu-hui.jpg
 # See docs/ADD-A-MEMBER.md for what each one means.
 socials:
   profile: 'https://www.ees.cuhk.edu.hk/staff/liu-hui/'
+  email: 'HuiLIU@link.cuhk.edu.hk'
+  linkedin: 'https://www.linkedin.com/in/hui-liu-b092112a8/'
+  github: 'https://github.com/HuiLIU1121'
+  researchgate: 'https://www.researchgate.net/profile/Hui-Liu-340'
+  orcid: 'https://orcid.org/0009-0003-8249-316X'
   # website:
-  # email:
   # scholar:
-  # orcid:
-  # researchgate:
-  # github:
-  # linkedin:
   # x:
   # bluesky:
   # mastodon:
@@ -67,3 +67,25 @@ Where you studied, and what you did before joining the group.
 Anything you would like people to know — teaching, outreach, fieldwork,
 what you do when you are not looking at seismograms.
 -->
+## Research
+
+I am a geophysicist interested in seismology and marine geophysics. My research focuses on using seismic and hydroacoustic data to study earthquake processes in oceanic environments, including fault-zone activity along mid-ocean ridges and oceanic transform faults.
+
+I am particularly interested in hydroacoustic monitoring of offshore earthquake sequences and in developing a clearer understanding of how foreshocks, aftershocks, and fault processes evolve beneath the seafloor.
+
+## Background
+
+I received an M.S. in Geophysics from the University of Science and Technology of China in 2021.
+
+## Research interests
+
+- Seismology  
+- Marine geophysics  
+- Hydroacoustic monitoring  
+- Oceanic transform faults  
+- Foreshock and aftershock sequences  
+- Submarine earthquake processes  
+
+## Conference presentations
+
+- Liu, H., Tan, Y. J., and Dziak, R. (2023), Hydroacoustic Monitoring of Foreshock and Aftershock Sequences on the Blanco Oceanic Transform Fault, *AGU Fall Meeting 2023*, San Francisco, United States, 12–16 December 2023, T14A-02. Oral presentation.
