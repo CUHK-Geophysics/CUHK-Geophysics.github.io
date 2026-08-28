@@ -3,6 +3,7 @@ import { Icon } from 'astro-icon/components';
 
 import ExternalLink from '@/components/ExternalLink.astro';
 import Section from '@/components/Section.astro';
+import VisitorMap from '@/components/VisitorMap.astro';
 import { fitDocument, offers, opportunities, values } from '@/data/opportunities';
 import PageLayout from '@/layouts/PageLayout.astro';
 import { piEmail } from '@/lib/site';
@@ -159,5 +160,13 @@ const groups = [
         </a>
       </p>
     </div>
+  </Section>
+  <Section
+    tone="muted"
+    eyebrow="Reach"
+    title="Who finds us"
+    lead="This page is read from all over. If you are somewhere on this map and thinking about applying, get in touch."
+  >
+    <VisitorMap />
   </Section>
 </PageLayout>

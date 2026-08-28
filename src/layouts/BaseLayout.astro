@@ -40,6 +40,17 @@ const ogImage = new URL(href('/og-image.png'), canonical);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical.href} />
 
+    {
+      /*
+      The visitor-map widget builds its follow-up request URLs with a hardcoded
+      `http://`, which a browser blocks as active mixed content on this HTTPS
+      site — the widget would simply not load. Those endpoints all serve over
+      HTTPS, so upgrading the requests fixes it. Harmless site-wide: nothing else
+      here requests anything over plain HTTP.
+    */
+    }
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+
     <meta name="theme-color" content="#750f6d" />
     <meta name="color-scheme" content="light dark" />
     <meta name="generator" content={Astro.generator} />
