@@ -12,6 +12,10 @@ them — `liu-hui.md`, `zhang-zhen.md`, and so on.
 
 If you are already on the Team page, this is all you need.
 
+Your **CUHK departmental profile** is already filled in for you. Everything else
+— Google Scholar, ORCID, GitHub, your own website, your CV — is up to you, and
+each one you add appears as a labelled button on your card.
+
 1. Open `src/content/members/` and find the file with your name.
 2. Find the `socials:` block near the bottom. It looks like this:
 

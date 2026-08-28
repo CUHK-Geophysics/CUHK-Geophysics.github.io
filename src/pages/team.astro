@@ -7,7 +7,7 @@ import Section from '@/components/Section.astro';
 import SocialLinks from '@/components/SocialLinks.astro';
 import { alumni } from '@/data/team';
 import PageLayout from '@/layouts/PageLayout.astro';
-import { formatJoined, groupByTrack, trackLabels } from '@/lib/members';
+import { formatJoined, groupByTrack, resolveSocials, trackLabels } from '@/lib/members';
 import { piEmail, site } from '@/lib/site';
 import { href } from '@/lib/url';
 
@@ -107,12 +107,7 @@ const structuredData = {
           </div>
         </dl>
 
-        <SocialLinks
-          socials={pi.data.socials}
-          personName={pi.data.name}
-          variant="labelled"
-          class="mt-5 -ml-2"
-        />
+        <SocialLinks socials={pi.data.socials} personName={pi.data.name} class="mt-5" />
       </div>
     </article>
   </Section>
@@ -177,11 +172,11 @@ const structuredData = {
                     In the group since {formatJoined(member.data.joined)}
                   </p>
 
-                  <SocialLinks
-                    socials={member.data.socials}
-                    personName={member.data.name}
-                    class="mt-2 -ml-1.5"
-                  />
+                  {resolveSocials(member.data.socials).length > 0 && (
+                    <div class="mt-4 border-t border-[var(--color-line)] pt-4">
+                      <SocialLinks socials={member.data.socials} personName={member.data.name} />
+                    </div>
+                  )}
                 </div>
               </article>
             ))}

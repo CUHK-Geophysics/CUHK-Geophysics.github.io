@@ -1,9 +1,12 @@
 ---
 /**
- * A member's accounts, as a row of icon links.
+ * A member's accounts, as a row of labelled chips.
  *
- * Two shapes: `icons` for the compact team-grid cards, and `labelled` for the
- * wider featured card where there is room to spell each destination out.
+ * Labelled, not icon-only. Icons alone were unreadable in practice: a row of
+ * faint monochrome glyphs — a building for a departmental profile, a badge for
+ * ORCID, a book for ResearchGate — told a sighted visitor nothing about where
+ * any of them led, and the row was quiet enough to miss altogether. The `icons`
+ * variant is kept for anywhere genuinely too narrow for text.
  *
  * Every link's accessible name states both the platform and whose account it
  * is — "Hui LIU: GitHub profile" — because a screen-reader user listing the
@@ -25,7 +28,7 @@ interface Props {
   class?: string;
 }
 
-const { socials, personName, variant = 'icons', class: className = '' } = Astro.props as Props;
+const { socials, personName, variant = 'labelled', class: className = '' } = Astro.props as Props;
 
 const links = resolveSocials(socials);
 ---
@@ -35,7 +38,7 @@ const links = resolveSocials(socials);
     <ul
       class:list={[
         'flex flex-wrap items-center',
-        variant === 'icons' ? 'gap-0.5' : 'gap-x-1 gap-y-1.5',
+        variant === 'icons' ? 'gap-0.5' : 'gap-1.5',
         className,
       ]}
     >
@@ -46,11 +49,13 @@ const links = resolveSocials(socials);
             target={link.isMail ? undefined : '_blank'}
             rel={link.isMail ? undefined : 'me noopener noreferrer'}
             class:list={[
-              'inline-flex min-h-8 cursor-pointer items-center gap-1.5 rounded-md text-[var(--color-ink-subtle)] transition-colors duration-[var(--duration-micro)] hover:bg-[var(--color-brand-wash)] hover:text-[var(--color-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]',
-              variant === 'icons' ? 'min-w-8 justify-center' : 'px-2 text-sm',
+              'inline-flex min-h-8 cursor-pointer items-center gap-1.5 rounded-sm text-[var(--color-ink-muted)] transition-colors duration-[var(--duration-micro)] hover:border-[var(--color-brand)] hover:bg-[var(--color-brand-wash)] hover:text-[var(--color-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]',
+              variant === 'icons'
+                ? 'min-w-8 justify-center border border-transparent'
+                : 'border border-[var(--color-line-strong)] px-2 text-xs',
             ]}
           >
-            <Icon name={link.icon} class="size-4 shrink-0" aria-hidden="true" />
+            <Icon name={link.icon} class="size-3.5 shrink-0" aria-hidden="true" />
             {variant === 'labelled' && <span>{link.short}</span>}
             <span class="sr-only">
               {personName}: {link.label}
