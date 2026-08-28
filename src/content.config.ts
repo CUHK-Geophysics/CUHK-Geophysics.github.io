@@ -76,32 +76,41 @@ const members = defineCollection({
 
 const news = defineCollection({
   loader: glob({ base: './src/content/news', pattern: ['**/*.md', '!**/_*.md'] }),
-  schema: z
-    .object({
-      title: z.string(),
-      /** Publication date. Set `datePrecision` when only the year is known. */
-      date: z.coerce.date(),
-      /**
-       * How much of `date` is actually known. Some outlets publish no date at
-       * all, and inventing a day would be worse than admitting the gap.
-       */
-      datePrecision: z.enum(['day', 'month', 'year']).default('day'),
-      /** Publication or organisation that carried the item. */
-      outlet: z.string(),
-      /**
-       * Present  -> outside coverage; the title links out to the outlet.
-       * Absent   -> the group's own announcement, rendered from the body.
-       */
-      url: z.string().url().optional(),
-      /** Language of the linked item, so titles are announced correctly. */
-      lang: z.enum(['en', 'zh-Hant', 'zh-Hans']).default('en'),
-      kind: z.enum(['coverage', 'award', 'announcement']).default('coverage'),
-      /** Byline, where the outlet gives one. */
-      author: z.string().optional(),
-      /** One or two sentences shown under the title in the list. */
-      excerpt: z.string().optional(),
-    })
-    .strict(),
+  schema: ({ image }) =>
+    z
+      .object({
+        title: z.string(),
+        /** Publication date. Set `datePrecision` when only the year is known. */
+        date: z.coerce.date(),
+        /**
+         * How much of `date` is actually known. Some outlets publish no date at
+         * all, and inventing a day would be worse than admitting the gap.
+         */
+        datePrecision: z.enum(['day', 'month', 'year']).default('day'),
+        /** Publication or organisation that carried the item. */
+        outlet: z.string(),
+        /**
+         * Present  -> outside coverage; the title links out to the outlet.
+         * Absent   -> the group's own announcement, rendered from the body.
+         */
+        url: z.string().url().optional(),
+        /** Language of the linked item, so titles are announced correctly. */
+        lang: z.enum(['en', 'zh-Hant', 'zh-Hans']).default('en'),
+        kind: z.enum(['coverage', 'award', 'announcement']).default('coverage'),
+        /** Byline, where the outlet gives one. */
+        author: z.string().optional(),
+        /** One or two sentences shown under the title in the list. */
+        excerpt: z.string().optional(),
+        /**
+         * Optional thumbnail, as a path relative to this file, e.g.
+         * `../../assets/gallery/09-alvin.jpg`. Omitted items render as
+         * text-only rows.
+         */
+        image: image().optional(),
+        /** Describes the thumbnail for screen readers. Required with `image`. */
+        imageAlt: z.string().optional(),
+      })
+      .strict(),
 });
 
 export const collections = { members, news };
