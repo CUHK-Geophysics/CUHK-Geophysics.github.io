@@ -1,7 +1,11 @@
 ---
 /** Vertical rhythm wrapper: one place that owns section spacing and headings. */
+import ContourBackdrop from '@/components/ContourBackdrop.astro';
+
 interface Props {
   id?: string;
+  /** Draws faint topographic contours behind the section. */
+  pattern?: boolean;
   title?: string;
   eyebrow?: string;
   lead?: string;
@@ -19,6 +23,7 @@ const {
   lead,
   tone = 'plain',
   as = 'h2',
+  pattern = false,
   class: className = '',
 } = Astro.props as Props;
 const Heading = as;
@@ -28,10 +33,12 @@ const Heading = as;
   id={id}
   class:list={[
     'py-14 md:py-20',
+    pattern && 'relative isolate overflow-hidden',
     tone === 'muted' && 'border-y border-[var(--color-line)] bg-[var(--color-surface-2)]',
     className,
   ]}
 >
+  {pattern && <ContourBackdrop class="-z-10" />}
   <div class="container-page">
     {
       (eyebrow || title || lead) && (

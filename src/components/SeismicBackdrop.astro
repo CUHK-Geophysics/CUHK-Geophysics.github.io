@@ -1,0 +1,213 @@
+---
+/**
+ * Decorative hero backdrop: a wireframe globe graticule, three scrolling
+ * seismic channels, and rings radiating from an epicentre.
+ *
+ * Two things move — the channels and the rings — which is the ceiling the
+ * design guidance sets for a single view. Everything else is static.
+ *
+ * All geometry is generated here at build time from a deterministic function,
+ * so the markup is byte-identical between builds. Motion is pure CSS on
+ * `transform` and `opacity` only, so it stays off the layout and main threads,
+ * and the whole thing is `aria-hidden` — the hero's meaning is in its text.
+ */
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props as Props;
+
+const W = 1200;
+const H = 420;
+
+/* ---------------------------------------------------------- seismic traces --- */
+
+/** Deterministic layered-sine noise in [-1, 1]. No PRNG, no build churn. */
+function noise(i: number, seed: number): number {
+  return (
+    0.6 * Math.sin(i * 0.31 + seed) +
+    0.28 * Math.sin(i * 0.83 + seed * 1.7) +
+    0.12 * Math.sin(i * 2.11 + seed * 0.4)
+  );
+}
+
+/**
+ * One channel, as a path spanning exactly `W` so two copies laid end to end
+ * tile seamlessly for the scroll loop.
+ */
+function channel(seed: number, amplitude: number, events: number[]): string {
+  const samples = 300;
+  const points: string[] = [];
+  for (let s = 0; s <= samples; s++) {
+    const t = s / samples;
+    // Background tremor, plus a decaying burst at each event position.
+    let envelope = 0.16;
+    for (const at of events) {
+      if (t >= at) envelope += Math.exp(-(t - at) * 26) * 0.84;
+    }
+    const y = -noise(s, seed) * envelope * amplitude;
+    points.push(`${(t * W).toFixed(1)},${y.toFixed(2)}`);
+  }
+  return `M${points.join('L')}`;
+}
+
+const channels = [
+  { y: 96, path: channel(0.7, 34, [0.22, 0.71]), speed: '38s', opacity: 0.7 },
+  { y: 210, path: channel(2.3, 46, [0.44]), speed: '29s', opacity: 1 },
+  { y: 324, path: channel(4.1, 26, [0.12, 0.58, 0.88]), speed: '46s', opacity: 0.6 },
+];
+
+/* -------------------------------------------------------------- graticule --- */
+
+const CX = 980;
+const CY = 210;
+const R = 250;
+
+/** Latitude ellipses: flattened circles at even intervals up the sphere. */
+const latitudes = [-0.72, -0.42, 0, 0.42, 0.72].map((f) => ({
+  cy: CY + f * R,
+  rx: R * Math.sqrt(1 - f * f),
+  ry: R * Math.sqrt(1 - f * f) * 0.16,
+}));
+
+/** Longitude arcs: ellipses of decreasing width through both poles. */
+const longitudes = [1, 0.72, 0.4].map((f) => ({ rx: R * f }));
+
+/* -------------------------------------------------------------- epicentre --- */
+
+const EPI_X = 742;
+const EPI_Y = 306;
+const rings = [0, 1, 2, 3];
+---
+
+<div
+  class:list={['pointer-events-none absolute inset-0 overflow-hidden', className]}
+  aria-hidden="true"
+>
+  <svg
+    class="seismic-backdrop h-full w-full"
+    viewBox={`0 0 ${W} ${H}`}
+    preserveAspectRatio="xMidYMid slice"
+    fill="none"
+  >
+    <defs>
+      <!-- Fades the artwork out behind the headline column so the backdrop can
+           never fight the text for contrast. -->
+      <linearGradient id="sb-fade" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="white" stop-opacity="0.05"></stop>
+        <stop offset="38%" stop-color="white" stop-opacity="0.45"></stop>
+        <stop offset="100%" stop-color="white" stop-opacity="1"></stop>
+      </linearGradient>
+      <mask id="sb-mask">
+        <rect width={W} height={H} fill="url(#sb-fade)"></rect>
+      </mask>
+    </defs>
+
+    <g mask="url(#sb-mask)" stroke="currentColor" class="text-[var(--color-brand)]">
+      <circle cx={CX} cy={CY} r={R * 1.5} fill="url(#sb-glow)" stroke="none"></circle>
+
+      <!-- Wireframe globe -->
+      <g class="opacity-[0.22]" stroke-width="1" vector-effect="non-scaling-stroke">
+        <circle cx={CX} cy={CY} r={R}></circle>
+        {latitudes.map((l) => <ellipse cx={CX} cy={l.cy} rx={l.rx} ry={l.ry} />)}
+        {longitudes.map((l) => <ellipse cx={CX} cy={CY} rx={l.rx} ry={R} />)}
+      </g>
+
+      <!-- Seismic channels. Each path is drawn twice, end to end, and the pair
+           is translated by exactly one width, so the loop has no seam. -->
+      {
+        channels.map((c) => (
+          <g transform={`translate(0 ${c.y})`} style={`opacity:${c.opacity}`}>
+            <g class="seismic-scroll" style={`--sb-duration:${c.speed}`}>
+              <path d={c.path} stroke-width="1.25" vector-effect="non-scaling-stroke" />
+              <path
+                d={c.path}
+                transform={`translate(${W} 0)`}
+                stroke-width="1.25"
+                vector-effect="non-scaling-stroke"
+              />
+            </g>
+            <line
+              x1="0"
+              y1="0"
+              x2={W}
+              y2="0"
+              stroke-width="1"
+              class="opacity-25"
+              vector-effect="non-scaling-stroke"
+            />
+          </g>
+        ))
+      }
+
+      <!-- Epicentre: rings expanding outward, and a fixed marker -->
+      <g class="opacity-90">
+        {
+          rings.map((i) => (
+            <circle
+              class="seismic-ring"
+              cx={EPI_X}
+              cy={EPI_Y}
+              r="26"
+              stroke-width="1.5"
+              vector-effect="non-scaling-stroke"
+              style={`--sb-delay:${i * 1.6}s`}
+            />
+          ))
+        }
+        <circle cx={EPI_X} cy={EPI_Y} r="3.5" fill="currentColor" stroke="none"></circle>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<style>
+  /*
+   * Motion is opt-in. With reduced motion the artwork simply sits still — a
+   * complete, static seismic record rather than a blank or half-drawn one.
+   */
+  .seismic-scroll {
+    transform: translateX(0);
+  }
+
+  .seismic-ring {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0.35;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .seismic-scroll {
+      animation: sb-scroll var(--sb-duration, 32s) linear infinite;
+      will-change: transform;
+    }
+
+    .seismic-ring {
+      opacity: 0;
+      animation: sb-ring 6.4s cubic-bezier(0.22, 0.7, 0.3, 1) infinite;
+      animation-delay: var(--sb-delay, 0s);
+      will-change: transform, opacity;
+    }
+  }
+
+  @keyframes sb-scroll {
+    to {
+      transform: translateX(-1200px);
+    }
+  }
+
+  @keyframes sb-ring {
+    0% {
+      transform: scale(0.18);
+      opacity: 0;
+    }
+    12% {
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(3.4);
+      opacity: 0;
+    }
+  }
+</style>

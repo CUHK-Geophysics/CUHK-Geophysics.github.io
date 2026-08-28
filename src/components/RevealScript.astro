@@ -1,0 +1,52 @@
+---
+/**
+ * Arms the entrance reveal and observes the elements, in one inline script.
+ *
+ * Inline and together on purpose: the script both hides the elements and sets up
+ * the observer that reveals them, so there is no window in which one has
+ * happened without the other. A visitor without JavaScript, or who prefers
+ * reduced motion, simply sees everything already in place.
+ */
+---
+
+<script is:inline>
+  (() => {
+    if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+    if (!('IntersectionObserver' in window)) return;
+
+    const root = document.documentElement;
+    root.setAttribute('data-reveal-armed', 'on');
+
+    /** Last resort: never leave anything hidden, whatever else goes wrong. */
+    const revealAll = () => {
+      for (const el of document.querySelectorAll('[data-reveal]')) el.classList.add('is-revealed');
+    };
+    setTimeout(revealAll, 3000);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.08 }
+    );
+
+    const attach = () => {
+      const targets = document.querySelectorAll('[data-reveal]');
+      if (targets.length === 0) {
+        root.removeAttribute('data-reveal-armed');
+        return;
+      }
+      for (const el of targets) observer.observe(el);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attach, { once: true });
+    } else {
+      attach();
+    }
+  })();
+</script>

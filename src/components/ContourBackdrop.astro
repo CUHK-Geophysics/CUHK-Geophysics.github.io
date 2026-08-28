@@ -1,0 +1,76 @@
+---
+/**
+ * Static topographic contour lines, for use behind a section.
+ *
+ * Deliberately motionless: the hero already spends this view's motion budget,
+ * and a second moving background would compete with it. Generated at build time
+ * from a deterministic function and marked decorative.
+ */
+
+interface Props {
+  class?: string;
+  /** Number of contour lines. */
+  lines?: number;
+}
+
+const { class: className = '', lines = 18 } = Astro.props as Props;
+
+const W = 1400;
+const H = 520;
+
+/**
+ * One contour: a smooth ridge line whose shape drifts with depth, so the set
+ * reads as nested elevation bands rather than parallel waves.
+ */
+function contour(i: number, total: number): string {
+  const depth = i / (total - 1);
+  const baseline = H * (0.12 + depth * 0.82);
+  const steps = 60;
+  const points: string[] = [];
+  for (let s = 0; s <= steps; s++) {
+    const t = s / steps;
+    const x = t * W;
+    const swell =
+      Math.sin(t * 5.1 + i * 0.42) * (52 - depth * 22) +
+      Math.sin(t * 11.3 + i * 0.9) * (19 - depth * 9) +
+      Math.sin(t * 2.2 - i * 0.3) * 30;
+    points.push(`${x.toFixed(1)},${(baseline + swell).toFixed(1)}`);
+  }
+  return `M${points.join('L')}`;
+}
+
+const contours = Array.from({ length: lines }, (_, i) => contour(i, lines));
+---
+
+<div
+  class:list={['pointer-events-none absolute inset-0 overflow-hidden', className]}
+  aria-hidden="true"
+>
+  <svg
+    class="h-full w-full text-[var(--color-brand)]"
+    viewBox={`0 0 ${W} ${H}`}
+    preserveAspectRatio="xMidYMid slice"
+    fill="none"
+  >
+    <defs>
+      <!-- Fades the pattern out toward the top so section headings sit on a
+           clean surface, and keeps it strongest along the lower edge. -->
+      <linearGradient id="cb-fade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="white" stop-opacity="0.06"></stop>
+        <stop offset="55%" stop-color="white" stop-opacity="0.5"></stop>
+        <stop offset="100%" stop-color="white" stop-opacity="1"></stop>
+      </linearGradient>
+      <mask id="cb-mask">
+        <rect width={W} height={H} fill="url(#cb-fade)"></rect>
+      </mask>
+    </defs>
+
+    <g mask="url(#cb-mask)" class="opacity-[0.26]">
+      {
+        contours.map((d) => (
+          <path d={d} stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke" />
+        ))
+      }
+    </g>
+  </svg>
+</div>

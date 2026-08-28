@@ -1,6 +1,7 @@
 ---
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
+import RevealScript from '@/components/RevealScript.astro';
 import ThemeScript from '@/components/ThemeScript.astro';
 import { site } from '@/lib/site';
 import { href } from '@/lib/url';
@@ -64,6 +65,7 @@ const ogImage = new URL(href('/og-image.png'), canonical);
     <meta name="twitter:image" content={ogImage.href} />
 
     <ThemeScript />
+    <RevealScript />
 
     {
       structuredData && (
