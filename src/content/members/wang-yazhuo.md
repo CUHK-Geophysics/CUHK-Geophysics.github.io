@@ -84,4 +84,8 @@ I earned my M.S. in Seismology from Nanjing University. Prior to that, I complet
 - Seismology  
 - Deep Learning and Artificial Intelligence in Geophysics  
 - Seismic signal processing and automation  
-- Earthquake monitoring and detection  
+
+
+## Selected publications
+
+- Wang, Y. and Ruan, Y. (2025), Improving the Signal-to-Noise Ratio of Single-Channel Earthquake Data With an Attention-Based UNet3+ and Phase-Difference Mask, *IEEE Transactions on Geoscience and Remote Sensing*, 63, 5909510. [https://doi.org/10.1109/TGRS.2025.3555661](https://doi.org/10.1109/TGRS.2025.3555661)
