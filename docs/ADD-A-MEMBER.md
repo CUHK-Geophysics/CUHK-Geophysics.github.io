@@ -99,6 +99,67 @@ All optional. Each must be a full web address starting with `https://`, except
 
 ---
 
+## Your own page
+
+Every member has a page of their own at `/team/your-file-name` — for example
+`/team/liu-hui`. It is built from the same file, so there is nothing extra to
+create.
+
+**It already works.** With nothing written, your page shows your photo, position,
+research interest and links, which is a perfectly good short profile. Fill it in
+whenever you like.
+
+To write it, scroll past the closing `---` in your file. You will find a block of
+commented-out headings as a starting point. Delete the `<!--` and `-->` around
+the parts you want and write in between:
+
+```markdown
+## Research
+
+I work on marine seismology, using hydroacoustic T-phases recorded by cabled
+seafloor observatories.
+
+## Background
+
+- M.Sc. in Geophysics, 2021
+
+## Selected publications
+
+- Liu, H. and Tan, Y.J. (2026), Title of the paper, _Journal Name_.
+```
+
+A few rules:
+
+- **Start your headings at `##`,** not `#`. The single `#` level is already used
+  by your name at the top of the page.
+- Anything between `<!--` and `-->` is hidden. That is how the starter headings
+  stay invisible until you want them.
+- `**bold**`, `*italic*`, `[link text](https://example.com)`, and lists made with
+  `-` at the start of a line all work.
+- Leave a blank line between paragraphs, or they run together.
+
+---
+
+## Submitting your changes without using git
+
+You do not need to install anything or use the command line.
+
+1. Open the repository on GitHub and go to `src/content/members/`.
+2. Click your file, then the **pencil icon** (Edit this file) at the top right.
+3. Make your changes in the browser.
+4. Scroll down, choose **Create a new branch for this commit and start a pull
+   request**, and click **Propose changes**.
+5. Click **Create pull request** on the next screen.
+
+That is it. The site rebuilds automatically once someone merges it, and the
+checks will tell you if a field needs fixing before then.
+
+To add a **photo** this way, open `src/content/members/`, click **Add file →
+Upload files**, drag your photo in, and choose the same "create a new branch"
+option at the bottom.
+
+---
+
 ## About the photo
 
 - **Square** works best. The site crops to a square, so anything else loses its

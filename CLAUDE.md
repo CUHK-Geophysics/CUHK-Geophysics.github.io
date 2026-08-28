@@ -37,12 +37,38 @@ global CLI expected.
 
 ## Content lives in data, not markup
 
-Add or edit people, publications, courses, photos and funding schemes in
-`src/data/*.ts`. They are typed, so a malformed entry fails the build. Prose
-that only appears once lives in the relevant `src/pages/*.astro`.
+Publications, courses, photos, research themes and funding schemes are typed
+modules in `src/data/*.ts`. Prose that appears once lives in the relevant
+`src/pages/*.astro`. `src/data/team.ts` holds only alumni.
 
 Publication and course PDFs are hosted on <https://tanyenjoe.com> and linked
 out, not mirrored here.
+
+## Members and news are Markdown — keep them that way
+
+`src/content/members/` and `src/content/news/` are Astro content collections
+(`src/content.config.ts`), edited by lab members who do not write code. Do not
+move this content back into `.ts` files, and be careful what you require of it.
+Four things exist for that reason and should be preserved:
+
+- **`socials` is `.nullish()`, not `.optional()`.** A member who comments out
+  every account still leaves `socials:` in the file, and YAML parses that as
+  `null`. That is a normal state here, so it has to validate.
+- **Each loader pattern excludes underscore-prefixed files.** Astro's glob
+  loader does not skip them, so `_template.md` would be validated as a real
+  entry and break the build.
+- **`src/content/` is in `.prettierignore`.** CI runs `format:check`; holding
+  hand-written YAML to Prettier turned a stray space into a red run for someone
+  who cannot read the error. The Zod schemas already enforce correctness.
+- **Member and news pages render an empty body gracefully.** Most bodies are
+  seeded with commented guidance and nothing else, so `/team/<id>` branches its
+  layout on whether real prose exists; both states must look finished.
+
+A news item with a `url` is outside coverage and links out; one without a `url`
+is the lab's own post and gets a page under `/news/`. Every member file builds a
+page at `/team/<id>` from its body.
+
+Guides for the lab: `docs/ADD-A-MEMBER.md`, `docs/ADD-NEWS.md`.
 
 ## Design intelligence
 

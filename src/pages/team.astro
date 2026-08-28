@@ -71,14 +71,19 @@ const structuredData = {
 
       <div>
         <h2 class="text-2xl">
-          {pi.data.name}{pi.data.qualification ? `, ${pi.data.qualification}` : ''}
-          {
-            pi.data.nameChinese && (
-              <span lang="zh-Hant" class="ml-1.5 font-normal text-[var(--color-ink-muted)]">
-                ({pi.data.nameChinese})
-              </span>
-            )
-          }
+          <a
+            href={href(`/team/${pi.id}`)}
+            class="hover:text-[var(--color-brand)] hover:underline hover:decoration-1 hover:underline-offset-2"
+          >
+            {pi.data.name}{pi.data.qualification ? `, ${pi.data.qualification}` : ''}
+            {
+              pi.data.nameChinese && (
+                <span lang="zh-Hant" class="ml-1.5 font-normal text-[var(--color-ink-muted)]">
+                  ({pi.data.nameChinese})
+                </span>
+              )
+            }
+          </a>
         </h2>
         <p class="mt-1 font-bold text-[var(--color-brand)]">{pi.data.role}</p>
         <p class="mt-4 max-w-xl leading-relaxed text-[var(--color-ink-muted)]">
@@ -145,13 +150,18 @@ const structuredData = {
                 />
                 <div class="flex flex-1 flex-col p-5">
                   <h4 class="font-serif text-lg leading-snug font-semibold text-balance">
-                    {member.data.name}
-                    {member.data.nameChinese && (
-                      <span lang="zh-Hant" class="font-normal text-[var(--color-ink-muted)]">
-                        {' '}
-                        ({member.data.nameChinese})
-                      </span>
-                    )}
+                    <a
+                      href={href(`/team/${member.id}`)}
+                      class="hover:text-[var(--color-brand)] hover:underline hover:decoration-1 hover:underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]"
+                    >
+                      {member.data.name}
+                      {member.data.nameChinese && (
+                        <span lang="zh-Hant" class="font-normal text-[var(--color-ink-muted)]">
+                          {' '}
+                          ({member.data.nameChinese})
+                        </span>
+                      )}
+                    </a>
                   </h4>
                   <p class="mt-1 text-sm font-bold text-[var(--color-brand)]">{member.data.role}</p>
                   <p class="mt-3 text-sm leading-relaxed text-[var(--color-ink-muted)]">
