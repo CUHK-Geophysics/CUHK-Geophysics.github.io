@@ -9,7 +9,7 @@ photo: ./liu-hui.jpg
 # Add your accounts here. Delete any line you do not use.
 # See docs/ADD-A-MEMBER.md for what each one means.
 socials:
-  # profile:
+  profile: 'https://www.ees.cuhk.edu.hk/staff/liu-hui/'
   # website:
   # email:
   # scholar:

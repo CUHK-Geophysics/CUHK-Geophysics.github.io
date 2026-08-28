@@ -1,8 +1,15 @@
 ---
 /**
- * Standard interior page: a compact brand-tinted page header followed by the
- * page's own sections. The homepage does not use this — it has its own hero.
+ * Standard interior page: a compact page header followed by the page's own
+ * sections. The homepage does not use this — it has its own hero.
+ *
+ * Passing `banner` swaps the plain header band for the same content set over a
+ * photograph. The height stays driven by the content, not the image, so a
+ * banner cannot introduce layout shift.
  */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
 interface Props {
@@ -15,9 +22,14 @@ interface Props {
   structuredData?: Record<string, unknown>;
   /** Eyebrow label above the heading. */
   eyebrow?: string;
+  /**
+   * Optional header photograph. Decorative: the heading carries the meaning and
+   * the image sits behind a scrim, so it is rendered with an empty alt.
+   */
+  banner?: ImageMetadata;
 }
 
-const { title, heading, lead, description, structuredData, eyebrow } = Astro.props;
+const { title, heading, lead, description, structuredData, eyebrow, banner } = Astro.props;
 
 /* `exactOptionalPropertyTypes` forbids passing an explicit `undefined`, so
    omit the optional keys entirely when the page did not supply them. */
@@ -29,20 +41,58 @@ const baseProps = {
 ---
 
 <BaseLayout {...baseProps}>
-  <div class="border-b border-[var(--color-line)] bg-[var(--color-surface-2)]">
-    <div class="container-page py-12 md:py-16">
-      {
-        eyebrow && (
-          <p class="text-2xs mb-3 font-sans font-bold tracking-[0.16em] text-[var(--color-brand)] uppercase">
-            {eyebrow}
-          </p>
-        )
-      }
-      <h1 class="max-w-3xl text-4xl">{heading ?? title}</h1>
-      {lead && <p class="mt-4 max-w-2xl text-lg text-[var(--color-ink-muted)]">{lead}</p>}
-      <slot name="header-extra" />
-    </div>
-  </div>
+  {
+    banner ? (
+      <div class="relative isolate border-b border-[var(--color-line)]">
+        <Image
+          src={banner}
+          alt=""
+          widths={[640, 960, 1440, banner.width]}
+          sizes="100vw"
+          quality={80}
+          loading="eager"
+          fetchpriority="high"
+          decoding="sync"
+          class="absolute inset-0 -z-10 h-full w-full object-cover"
+        />
+        {/*
+          Bottom-anchored scrim rather than a flat overlay: the heading sits in
+          the lower half where the gradient is near-opaque, while the top of the
+          photograph stays vivid. Measured on the actual composited pixels — a
+          flat 50% wash was the minimum that cleared 4.5:1 and it muted the
+          whole image to get there.
+        */}
+        <div
+          class="absolute inset-0 -z-10 bg-gradient-to-t from-black/88 via-black/74 to-black/48"
+          aria-hidden="true"
+        />
+
+        <div class="container-page flex min-h-[clamp(13rem,26vw,20rem)] flex-col justify-end py-12 md:py-16">
+          {eyebrow && (
+            <p class="text-2xs mb-3 font-sans font-bold tracking-[0.16em] text-white uppercase">
+              {eyebrow}
+            </p>
+          )}
+          <h1 class="max-w-3xl text-4xl text-white">{heading ?? title}</h1>
+          {lead && <p class="mt-4 max-w-2xl text-lg text-white">{lead}</p>}
+          <slot name="header-extra" />
+        </div>
+      </div>
+    ) : (
+      <div class="border-b border-[var(--color-line)] bg-[var(--color-surface-2)]">
+        <div class="container-page py-12 md:py-16">
+          {eyebrow && (
+            <p class="text-2xs mb-3 font-sans font-bold tracking-[0.16em] text-[var(--color-brand)] uppercase">
+              {eyebrow}
+            </p>
+          )}
+          <h1 class="max-w-3xl text-4xl">{heading ?? title}</h1>
+          {lead && <p class="mt-4 max-w-2xl text-lg text-[var(--color-ink-muted)]">{lead}</p>}
+          <slot name="header-extra" />
+        </div>
+      </div>
+    )
+  }
 
   <slot />
 </BaseLayout>
