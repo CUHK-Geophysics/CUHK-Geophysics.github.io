@@ -15,10 +15,11 @@ socials:
    scholar: 'https://scholar.google.com/citations?user=kUQR1egAAAAJ&hl=en'
    orcid:  'https://orcid.org/0009-0008-3800-8688'
    researchgate: 'https://www.researchgate.net/profile/Mahdi-Farmahini-Farahani?ev=hdr_xprf'
-   github:
-  # linkedin:
+   github: 'https://github.com/aradfarahani'
+   linkedin: 'https://www.linkedin.com/in/aradfarahani/'
+   cv: 'https://raw.githubusercontent.com/aradfarahani/aradfarahani/main/CV/aradfarahani.pdf'
   # x:
   # bluesky:
   # mastodon:
-  # cv:
+   
 ---
