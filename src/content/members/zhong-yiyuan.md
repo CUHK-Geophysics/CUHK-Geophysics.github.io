@@ -10,7 +10,7 @@ photo: ./zhong-yiyuan.jpg
 # See docs/ADD-A-MEMBER.md for what each one means.
 socials:
   profile: 'https://www.ees.cuhk.edu.hk/staff/zhong-yiyuan/'
-  email: 'https://www.ees.cuhk.edu.hk/staff/zhong-yiyuan/'
+  email: 'yiyuan.zhong@link.cuhk.edu.hk'
   scholar: 'https://scholar.google.com.hk/citations?user=V1kY70IAAAAJ&hl=zh-TW'
   orcid: 'https://orcid.org/0000-0001-5164-7734'
   researchgate: 'https://www.researchgate.net/profile/Yiyuan-Zhong'
