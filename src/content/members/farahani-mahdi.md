@@ -104,5 +104,5 @@ Mentorship has also been a deeply meaningful part of my work, particularly the o
 - Always up for a fresh V60 brew  
 - Learning Kamancheh (inspired by the artistry of Ali-Asghar Bahari)  
 - Fine pen collector  
-- Watch enthusiast
+- Horology  enthusiast
 
