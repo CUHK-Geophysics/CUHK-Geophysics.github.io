@@ -1,0 +1,57 @@
+---
+/**
+ * MapMyVisitors visitor map.
+ *
+ * Notes for whoever maintains this:
+ *
+ * - This is the only third-party request the site makes. Everything else —
+ *   fonts, images, the video embed — is self-hosted or click-to-load, so this is
+ *   the one place visitor data leaves for another origin. The token in the URL
+ *   ties the data to the lab's MapMyVisitors account.
+ * - The script is `is:inline` because Astro would otherwise try to bundle it,
+ *   and the widget locates its own script element by id to know where to render.
+ * - `https://` rather than the protocol-relative `//` the vendor supplies, so
+ *   the request can never be downgraded.
+ * - The box reserves a minimum height. The widget injects its content after
+ *   loading, which would otherwise shift the page as it arrives.
+ *
+ * The vendor's companion *globe* widget is deliberately not included. Its data
+ * call, `globe_call_home.js`, is served as `Content-Type: text/html` with an
+ * HTML body rather than JSONP, so Chromium's Opaque Response Blocking refuses to
+ * execute it (`net::ERR_BLOCKED_BY_ORB`) and the globe renders as an empty box.
+ * That is server-side and cannot be worked around here.
+ */
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props as Props;
+
+const MAP_TOKEN = 'XCtZLg49H0IaND0LEqP7VO0LvSdwmCYvedSCrDi_eBY';
+---
+
+<figure class:list={['max-w-2xl', className]}>
+  <div
+    class="min-h-[19rem] overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-2)] p-4"
+  >
+    <script
+      is:inline
+      async
+      type="text/javascript"
+      id="mapmyvisitors"
+      src={`https://mapmyvisitors.com/map.js?d=${MAP_TOKEN}&cl=ffffff&w=a`}></script>
+  </div>
+  <figcaption class="mt-3 text-sm text-[var(--color-ink-subtle)]">
+    Recent visitors to this site, plotted by approximate location. Counts and map data come from{
+      ' '
+    }
+    <a
+      href="https://mapmyvisitors.com"
+      rel="noopener noreferrer"
+      target="_blank"
+      class="text-[var(--color-brand)] underline decoration-1 underline-offset-2 hover:text-[var(--color-brand-strong)]"
+      >MapMyVisitors<span class="sr-only"> (opens in a new tab)</span></a
+    >.
+  </figcaption>
+</figure>
