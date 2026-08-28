@@ -68,3 +68,41 @@ Where you studied, and what you did before joining the group.
 Anything you would like people to know — teaching, outreach, fieldwork,
 what you do when you are not looking at seismograms.
 -->
+## Research
+
+I am a researcher working at the intersection of computational geoscience, seismology, and planetary science. My work focuses on developing robust numerical frameworks, remote-sensing workflows, and machine-learning models to analyze Earth and planetary processes. Beyond pure research, I am an entrepreneur dedicated to building scalable technological solutions, as evidenced by my work co-founding **FEZtool**, where I lead R&D in geospatial algorithms and Earth science data analysis. My goal is to build open computational tools and data-driven pipelines that bridge geological observations with predictive modeling.
+
+## Background
+
+My academic foundation was built during my B.Sc. in Geology at Kharazmi University, followed by an enriching experience at the University of Lille’s Pre-PhD Summer School on Water Resource Management. I also had the privilege of beginning my Master’s studies in Exploration Seismology at the University of Tehran’s Institute of Geophysics under the mentorship of Professor Majid Bagheri; while I eventually transitioned away from that program to pursue a PhD opportunity, I am grateful for the direction it provided my research path.
+Prior to this, I valued the experience of lecturing for the **Space Research and Technology Institute (SRTI-BAS)** in Bulgaria, in collaboration with Europlanet. My research journey has been further enriched by working alongside the team at the **Center for Complex Networks (CCNet)** at Shahid Beheshti University. 
+Mentorship has also been a deeply meaningful part of my work, particularly the opportunity to share data science concepts with the talented students of the Iran National IESO 2024 Team at the **Young Scholars Club (YSC)**. Beyond academia, I have learned a great deal through collaborative professional roles, including contributing to strategic planning at **NovaVira**, supporting project management efforts at **ARYANIC**, and assisting with product development and entrepreneurship programs at **GreenOly**.
+
+## Research interests
+
+- Computational science and scientific computing  
+- Seismology and seismic data processing  
+- Planetary science and remote sensing  
+
+## Selected publications
+
+- Talkhablou, M., Farmahinifarahani, M., and Mansouri, S. S. (2025), A Python-Based Framework for Land Cover Classification in Engineering Geology: A Comparative Assessment of SVM, K-Means, and Spectral Indices, *Kharazmi Journal of Earth Sciences*.  
+- Saravani, M. J., Kashef, S., Farmahinifarahani, M., Kashefi, M., and Zohreh, M. (2023), Investigating the accuracy of hybrid models with wavelet transform in the forecast of watershed runoff, *Journal of Water Management Modeling*.  
+
+## Honours and awards
+
+- Merit Award (Ideator Category), 9th National Young Scientists Festival  
+- Ranked 8th Nationally, Master of Geophysics National University Entrance Exam (Fall 2025), National Organization of Educational Testing  
+- Full Scholarship, Hydro 2024 Pre-PhD Summer School, University of Lille  
+- Gold Medal, DrCT (Design Thinking with Robotics and Computational Thinking), SIMCC, 2021  
+
+## Beyond research
+
+- Indie game lover  
+- Jazz enthusiast  
+- Jigsaw puzzle aficionado  
+- Always up for a fresh V60 brew  
+- Learning Kamancheh (inspired by the artistry of Ali-Asghar Bahari)  
+- Fine pen collector  
+- Watch enthusiast
+
