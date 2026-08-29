@@ -12,12 +12,12 @@ socials:
   profile: 'https://www.ees.cuhk.edu.hk/staff/wang-yazhuo/'
   email: 'yazhuowang@link.cuhk.edu.hk'
   orcid: 'https://orcid.org/0009-0007-3302-8092'
-  
+  github: 'https://github.com/GeoWang2000'
+
   # website:
   # scholar:
   # orcid:
   # researchgate:
-  # github:
   # linkedin:
   # x:
   # bluesky:
