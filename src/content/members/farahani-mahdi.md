@@ -106,3 +106,4 @@ Mentorship has also been a deeply meaningful part of my work, particularly the o
 - Fine pen collector  
 - Horology  enthusiast
 
+<div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="a7eb16af-0673-44c1-a135-3e93abf7e4a6" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
