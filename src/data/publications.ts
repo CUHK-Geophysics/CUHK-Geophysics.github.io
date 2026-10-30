@@ -47,7 +47,7 @@ export interface Publication {
 
 export const publications: readonly Publication[] = [
   {
-    n: 43,
+    n: 42,
     status: 'under review',
     authors: 'Song, Z., Wang, N., Tan, Y.J., and Elsheikh, A.H.',
     title:
@@ -56,22 +56,13 @@ export const publications: readonly Publication[] = [
     topics: ['ml', 'stress'],
   },
   {
-    n: 42,
+    n: 41,
     status: 'under review',
     authors: '#Liu, H. and Tan, Y.J.*',
     title:
       'Automatic cataloging of earthquakes in the Northeast Pacific ocean from 2015 to 2025 based on hydroacoustic T-phases recorded by cabled seafloor observatories',
     journal: 'JGR',
-    topics: ['ml', 'stress'],
-  },
-  {
-    n: 41,
-    status: 'under revision',
-    authors: '#Liu, H. and Tan, Y.J.*',
-    title:
-      'Automatic cataloging of earthquakes in the Northeast Pacific ocean based on hydroacoustic T-phases recorded by cabled seafloor observatories',
-    journal: 'Journal of Geophysical Research',
-    topics: ['marine', 'ml'],
+    topics: ['ml', 'marine'],
   },
   {
     n: 40,
