@@ -47,16 +47,25 @@ export interface Publication {
 
 export const publications: readonly Publication[] = [
   {
-    n: 41,
+    n: 43,
     status: 'under review',
-    authors: '^Liu, M., #Liu, H., and Tan, Y.J.*',
+    authors: 'Song, Z., Wang, N., Tan, Y.J., and Elsheikh, A.H.',
     title:
-      'Interaction between seismic and aseismic slips along the Mendocino oceanic transform fault offshore northern California',
-    journal: 'Earth and Planetary Science Letters',
-    topics: ['marine', 'stress'],
+      'Deep-learning phase pickers for induced seismicity monitoring: Cross-domain generalization, pretraining configurations, and performance limits',
+    journal: 'JGR',
+    topics: ['ml', 'stress'],
   },
   {
-    n: 40,
+    n: 42,
+    status: 'under review',
+    authors: '#Liu, H. and Tan, Y.J.*',
+    title:
+      'Automatic cataloging of earthquakes in the Northeast Pacific ocean from 2015 to 2025 based on hydroacoustic T-phases recorded by cabled seafloor observatories',
+    journal: 'JGR',
+    topics: ['ml', 'stress'],
+  },
+  {
+    n: 41,
     status: 'under revision',
     authors: '#Liu, H. and Tan, Y.J.*',
     title:
@@ -65,12 +74,24 @@ export const publications: readonly Publication[] = [
     topics: ['marine', 'ml'],
   },
   {
-    n: 39,
+    n: 40,
     status: 'under review',
     authors: '$Zhang, Z., Liu, L., and Tan, Y.J.*',
     title: 'Citizen seismology enables low-cost early detection of catastrophic mass movements',
     journal: 'PNAS',
     topics: ['surface'],
+  },
+  {
+    n: 39,
+    year: 2026,
+    authors: '^Liu, M., #Liu, H., and Tan, Y.J.*',
+    title:
+      'Interaction between seismic and aseismic slips along the Mendocino oceanic transform fault offshore northern California',
+    journal: 'Earth and Planetary Science Letters',
+    detail: '697, 120421',
+    topics: ['lfe', 'stress'],
+    pdf: 'https://agupubs.onlinelibrary.wiley.com/doi/epdf/10.1029/2026GL121743',
+    review: 'https://tanyenjoe.com/wp-content/uploads/2026/04/38_reviews.pdf',
   },
   {
     n: 38,
@@ -81,8 +102,8 @@ export const publications: readonly Publication[] = [
     journal: 'Geophysical Research Letters',
     detail: '53(9), e2026GL121743',
     topics: ['marine', 'stress'],
-    pdf: 'https://agupubs.onlinelibrary.wiley.com/doi/epdf/10.1029/2026GL121743',
-    review: 'https://tanyenjoe.com/wp-content/uploads/2026/04/38_reviews.pdf',
+    pdf: 'https://www.sciencedirect.com/science/article/pii/S0012821X26006011?ref=pdf_download&fr=RR-2&rr=a52898c46ad404f4',
+    review: 'https://tanyenjoe.com/wp-content/uploads/2026/10/39_reviews.pdf',
   },
   {
     n: 37,
